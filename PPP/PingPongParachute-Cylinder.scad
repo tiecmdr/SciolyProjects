@@ -1,5 +1,6 @@
 // Lightweight bottle-bottom nose extension. Dimensions are in millimeters.
-// Export lower_body, middle_body, upper_body, and flange in ABS; nose in TPU.
+// Export lower_body, middle_body, upper_body, and flange in Bambu ASA Aero;
+// nose in TPU 95A. Use the ASA Aero profile, NOT ABS or ordinary ASA.
 // Never print the full assembly as one piece.
 // Assembly is for viewing. part="fit_test" is a short tube/socket coupon;
 // print it with the flange to check both socket fit and bottle seating.
@@ -7,10 +8,9 @@
 // The middle adds exactly 300 mm; its 20 mm spigot makes print height 320 mm.
 // With an assumed 68 mm bottle: 34 mm flange, 20.4 mm base, 12 mm waist.
 // The flange has a flat tape-facing top and a contoured bottle-facing underside.
-// Nominal combined mass: 45.1 g full / 33.7 g short; flange alone: 3.0 g ABS.
+// Mass depends on ASA Aero foaming, flow, temperature, and sliced walls.
+// Use the calibrated slicer estimate; solid ABS density is not applicable.
 // Estimates exclude tape/supports/bottle/payload.
-// Mass depends on filament density and sliced walls.
-// Density assumptions are 1.04 and 1.21 g/cm^3; use your slicer's estimate.
 // The broad tape flange is separate to avoid a tall supported overhang.
 //
 // The Coke bottle dimensions and five-foot seat below are APPROXIMATIONS.
@@ -26,7 +26,8 @@
 // including the male spigots; all three fit a 325 mm
 // printer height limit.
 // Use approximately
-// 0.2 mm layers, a brim, and an enclosed ABS profile. Inspect sliced thin walls;
+// 0.2 mm layers, a brim, and the enclosed H2C ASA Aero profile (270 C,
+// 0.52 flow ratio). Inspect sliced thin walls;
 // use perimeter printing, not vase mode. TPU: print flat opening down, using
 // removable internal support if your slicer requires it for the upper dome.
 // Print the flange bottle-contact side down with local support beneath its
@@ -42,17 +43,19 @@
 // meet, then retain with external tape. None is a latch.
 // Without the middle, connect the SAME lower and upper parts directly.
 // Print joint_lower_test and joint_upper_test to check this fit beforehand.
+// Print nose_neck_test in ASA Aero and nose_socket_test in TPU 95A to check
+// the nose clearance and stop without printing the full upper body.
 // The longer, narrow tube is more flexible; geometry alone does not establish
 // launch/impact strength or rule compliance. Test before flight.
 // PROTOTYPE ONLY: not qualified for repeated launches or 20 m drops.
-// The 900 mm length, thin ABS walls, layer bonding, and tape-retained joints
+// The 900 mm length, thin foamed ASA walls, layer bonding, and tape-retained joints
 // can fail under bending or impact. A TPU nose is not a validated crash absorber.
 // Tape does not have a calculated safety rating here; do not
 // sand, heat, cut, glue, or otherwise damage the pressurized bottle.
 // The nose socket is a clearance/slip fit, NOT a locking or interference fit.
-// Retain the TPU nose with external tape across the ABS/TPU joint and verify
+// Retain the TPU nose with external tape across the ASA/TPU joint and verify
 // adhesion on both materials; the stop controls depth, not pull-off retention.
-// "3M tape" does not specify adhesion, peel strength, or ABS/TPU compatibility.
+// "3M tape" does not specify adhesion, peel strength, or ASA/TPU compatibility.
 // Neither a safe tape load nor 20 m impact survival is established by this CAD.
 // Fit-test, verify nose retention, and test progressively in a controlled area.
 // A TPU shell alone does not provide enough travel to guarantee shock absorption.
@@ -62,7 +65,7 @@
 // Check the sliced TPU skin for continuous walls; thinner skin is less durable.
 
 /* [Export] */
-part = "assembly"; // [assembly, lower_body, middle_body, upper_body, flange, nose, fit_test, joint_lower_test, joint_upper_test]
+part = "assembly"; // [assembly, lower_body, middle_body, upper_body, flange, nose, fit_test, joint_lower_test, joint_upper_test, nose_neck_test, nose_socket_test]
 print_orientation = true;
 include_middle = true; // Assembly preview only; individual exports never change.
 
@@ -140,7 +143,8 @@ eps = 0.02;
 assert(part == "assembly" || part == "lower_body" || part == "middle_body" ||
        part == "upper_body" ||
        part == "flange" || part == "nose" || part == "fit_test" ||
-       part == "joint_lower_test" || part == "joint_upper_test",
+       part == "joint_lower_test" || part == "joint_upper_test" ||
+       part == "nose_neck_test" || part == "nose_socket_test",
        "Unknown part selector; export the three tube sections separately.");
 assert(angular_segments >= 40 && body_steps >= 40, "Mesh quality is too low.");
 assert(body_wall > 0 && nose_wall > 0 && nose_wall < ball_radius);
@@ -170,7 +174,7 @@ assert(socket_outer_radius <
        "Socket must fit inside the trimmed sphere's bottom rim.");
 assert(socket_radius - 0.6 > 0 &&
        socket_radius - 0.6 < neck_radius,
-       "Socket stop must overlap the ABS collar.");
+       "Socket stop must overlap the ASA collar.");
 assert(joint_overlap > 0 && joint_wall > 0 && joint_root_height > 0 &&
        joint_radial_clearance >= 0 && joint_test_margin > joint_root_height);
 assert(joint_diameter > waist_diameter && joint_socket_wall >= body_wall);
@@ -370,12 +374,12 @@ module exported_lower(start = body_start) {
         lower_tube(start);
 }
 
-module exported_upper(height = body_height) {
+module exported_upper(height = body_height, start = split_height) {
     if (print_orientation)
         translate([0, 0, height])
-            rotate([180, 0, 0]) body_shell(height, split_height, "upper");
+            rotate([180, 0, 0]) body_shell(height, start, "upper");
     else
-        body_shell(height, split_height, "upper");
+        body_shell(height, start, "upper");
 }
 
 function flange_index(side, ring, segment) =
@@ -488,6 +492,13 @@ else if (part == "joint_lower_test")
     exported_lower(split_height - joint_test_margin);
 else if (part == "joint_upper_test")
     exported_upper(split_height + joint_overlap + joint_test_margin);
+else if (part == "nose_neck_test")
+    exported_upper(body_height, body_height - socket_overlap - 2);
+else if (part == "nose_socket_test")
+    intersection() {
+        nose_shell();
+        cylinder(r = ball_radius, h = socket_overlap + socket_stop_height);
+    }
 else {
     color([0.85, 0.65, 0.2]) lower_tube();
     if (include_middle)
