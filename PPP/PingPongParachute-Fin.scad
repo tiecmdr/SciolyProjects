@@ -7,9 +7,8 @@
 //
 // Both curved tape tabs extend toward assembly +y only. Print the opposite
 // flat face down: the tabs grow upward, not into the bed. No supports intended.
-// Tabs occupy the first and last 20 mm of the mounting edge, not its middle.
-// The entire fin thickens toward the bottom on that same side, preserving
-// the flat print face. This is a weight/stiffness feature, not a tested airfoil.
+// Tabs occupy the first and last 40 mm of the mounting edge, not its middle.
+// The fin web has uniform 2 mm thickness and a flat print face.
 // The swept outer edge follows a smooth S curve; no drag optimum is claimed.
 // Tape adhesion, aerodynamic stability and launch strength require testing.
 
@@ -19,18 +18,19 @@ print_orientation = true;
 
 /* [Placement and size] */
 minimum_mouth_clearance = 55;
-root_start = 100; // From the mouth, along the bottle axis; locate on the barrel.
+root_start = 60; // PROVISIONAL: fits the example bottle; verify its shoulder contour.
 bottle_height = 220; // EXAMPLE ONLY: enter measured mouth-to-base height.
-root_length = 84; // Bottle-facing edge length, independent of bottle height.
-fin_span = 64; // Bottom edge from bottle-facing edge to the outer tip.
-fin_thickness = 1; // Nominal thickness at the top of the fin.
-bottom_thickness = 2.4; // A continuous linear taper over the full root length.
-mount_test_width = 5;
+root_length = 150; // Bottle-facing edge length, independent of bottle height.
+planform_scale = root_length / 84;
+fin_span = 64 * planform_scale; // Same swept outline, scaled with the mounting edge.
+fin_thickness = 2; // Uniform thickness; no top-to-bottom wedge.
+mount_test_width = 5 * planform_scale;
 
 /* [Rounded edges] */
-corner_radius = 2;
-tab_corner_radius = 0.8;
-edge_radius = 0.2; // Limited by the thin web and tab edges.
+corner_radius = 2 * planform_scale;
+tab_corner_radius = 0.8 * planform_scale;
+fin_edge_radius = 0.8; // Rounded exposed wing edges; retain the flat print face.
+edge_radius = 0.2; // Smaller rounding preserves the thin tape-tab walls.
 
 /* [Bottle contour - replace with measurements] */
 // [distance from the lower end of the mounting edge, bottle DIAMETER].
@@ -39,11 +39,11 @@ bottle_profile = [[0, 68], [root_length / 2, 68], [root_length, 68]];
 bottle_radial_clearance = 0.3;
 
 /* [One-sided tape tabs] */
-tab_width = 5; // Sideways projection from the fin's center plane.
-tab_length = 20; // Axial height at each end of the root.
+tab_width = 20; // Sideways projection from the fin's center plane.
+tab_length = 40; // Axial height at each end of the root.
 tab_thickness = 0.8;
 tab_edge_thickness = 0.6;
-tab_edge_taper = 3; // Feather the upstream/downstream edges under the tape.
+tab_edge_taper = 3 * planform_scale; // Feather the edges; retain the thin tab walls.
 
 /* [Preview] */
 fin_count = 3;
@@ -64,12 +64,12 @@ assert(root_end <= bottle_height,
        "The mounting edge must fit between the mouth and base.");
 assert(fin_span > mount_test_width && mount_test_width > tab_thickness);
 assert(fin_thickness >= 0.8 && tab_thickness >= 0.8);
-assert(bottom_thickness >= fin_thickness);
 assert(tab_edge_thickness >= 0.6 && tab_edge_thickness <= tab_thickness);
 assert(tab_edge_taper > 0 && 2 * tab_edge_taper < tab_length);
 assert(edge_radius > 0 &&
-       2 * edge_radius < min(fin_thickness, tab_edge_thickness));
-assert(corner_radius > edge_radius && 2 * corner_radius < mount_test_width);
+       2 * edge_radius < tab_edge_thickness);
+assert(fin_edge_radius > 0 && 2 * fin_edge_radius < fin_thickness);
+assert(corner_radius > fin_edge_radius && 2 * corner_radius < mount_test_width);
 assert(tab_corner_radius > edge_radius &&
        2 * tab_corner_radius < min(tab_width, tab_length));
 assert(bottle_radial_clearance >= 0 && tab_width > 0);
@@ -115,23 +115,22 @@ function bezier(points, t) =
     3 * (1 - t) * t * t * points[2] +
     pow(t, 3) * points[3];
 
-module fin_web(test = false, thickness = fin_thickness) {
+module fin_web(test = false) {
     edge = [for (z = root_levels) [contact_radius(z), z]];
     outside = test ?
         [for (i = [len(root_levels) - 1 : -1 : 0])
             [contact_radius(root_levels[i]) + mount_test_width, root_levels[i]]] :
         [for (segment = leading_segments)
-            for (step = [1 : 12])
-                let(p = bezier(segment, step / 12),
+            for (step = [1 : 24])
+                let(p = bezier(segment, step / 24),
                     z = root_end - root_length * p[1])
                     [contact_radius(z) + fin_span * p[0], z]];
-    translate([0, (thickness - fin_thickness) / 2, 0])
-        rotate([90, 0, 0])
-            linear_extrude(height = thickness - 2 * edge_radius,
-                           center = true, convexity = 5)
-                offset(r = corner_radius - edge_radius)
-                    offset(delta = -corner_radius)
-                        polygon(concat(edge, outside));
+    rotate([90, 0, 0])
+        linear_extrude(height = fin_thickness - 2 * fin_edge_radius,
+                       center = true, convexity = 5)
+            offset(r = corner_radius - fin_edge_radius)
+                offset(delta = -corner_radius)
+                    polygon(concat(edge, outside));
 }
 
 module radial_prism(yz_points, rounding = 0) {
@@ -144,18 +143,6 @@ module radial_prism(yz_points, rounding = 0) {
             else
                 offset(delta = -edge_radius)
                     polygon([for (p = yz_points) [-p[1], p[0]]]);
-}
-
-module tapered_web(test = false) {
-    intersection() {
-        fin_web(test, bottom_thickness);
-        radial_prism([
-            [-fin_thickness / 2, root_start],
-            [bottom_thickness - fin_thickness / 2, root_start],
-            [fin_thickness / 2, root_end],
-            [-fin_thickness / 2, root_end]
-        ]);
-    }
 }
 
 module tape_tab(start) {
@@ -181,18 +168,18 @@ module tape_tab(start) {
     }
 }
 
-module round_edges() {
+module round_edges(radius = edge_radius) {
     minkowski() {
         children();
-        resize([2 * edge_radius, 2 * edge_radius, 2 * edge_radius])
-            sphere(r = edge_radius, $fn = 24);
+        resize([2 * radius, 2 * radius, 2 * radius])
+            sphere(r = radius, $fn = 24);
     }
 }
 
 module fin(test = false) {
     // Round inset components separately to avoid decomposing the full fin union.
     union() {
-        round_edges() tapered_web(test);
+        round_edges(fin_edge_radius) fin_web(test);
         round_edges() tape_tab(root_start);
         round_edges() tape_tab(root_end - tab_length);
     }
@@ -227,10 +214,10 @@ echo(str("Lowest fin/tab point: ", root_start,
          " mm above mouth; required > ", minimum_mouth_clearance, " mm."));
 echo(str("Mounting edge: ", root_length, " mm; radial span: ", fin_span,
          " mm; three fins at 120 degrees."));
-echo(str("Full-height thickness taper: ", fin_thickness, " mm at top to ",
-         bottom_thickness, " mm at bottom over ", root_length, " mm."));
+echo(str("Uniform web thickness: ", fin_thickness, " mm; no axial taper."));
 echo(str("Corner radii: fin ", corner_radius, " mm; tabs ", tab_corner_radius,
-         " mm; exposed edge rounding ", edge_radius, " mm."));
+         " mm; wing edge rounding ", fin_edge_radius,
+         " mm; tab edge rounding ", edge_radius, " mm."));
 echo(str("One-sided rounded rectangular tabs: ", tab_width, " mm sideways x ", tab_length,
          " mm axial x ", tab_thickness, " mm thick; edges taper to ",
          tab_edge_thickness, " mm over ", tab_edge_taper, " mm."));

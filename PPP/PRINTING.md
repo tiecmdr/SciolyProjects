@@ -26,14 +26,14 @@ filaments according to their spool/manufacturer instructions. Use
 appropriate ventilation for ASA printing and a TPU-compatible release
 layer on the plate.
 
-The project uses Arachne, two wall loops, an 8 mm outer brim, reduced
+The body/nose project uses Arachne, four wall loops, an 8 mm outer brim, reduced
 wall speeds (35 mm/s outer, 50 mm/s inner), and reduced acceleration for
 the tall, narrow tubes. These are conservative starting settings, not a
 substitute for checking actual foaming and layer bonding.
 
 | Plate | Contents | Notes |
 |---|---|---|
-| 1 | TPU nose | Opening down; automatic tree supports, including the internal dome; 5 mm brim |
+| 1 | TPU nose | Hollow 3.2 mm shell, 100% shell infill; opening down; internal tree support; 5 mm brim |
 | 2 | ASA Aero middle tube | Female socket down; 320 mm tall |
 | 3 | ASA Aero upper tube | Nose neck down; 281.9 mm tall |
 | 4 | ASA Aero lower tube | Base down; 301.9 mm tall |
@@ -41,12 +41,13 @@ substitute for checking actual foaming and layer bonding.
 | 6 | ASA Aero fit coupons | Base socket, male/female tube joint, and nose neck |
 | 7 | TPU nose socket coupon | Includes the actual socket stop; no dome or support needed |
 
-`PingPongParachute-Fins.3mf` has two separate ASA Aero plates:
+`PingPongParachute-Fins.3mf` has three separate ASA Aero plates:
 
 | Plate | Contents | Notes |
 |---|---|---|
-| 1 | Three ASA Aero swept fins | 5% gyroid wing infill; solid root and tape tabs |
-| 2 | ASA Aero fin mounting test | Solid; print before the fins |
+| 1 | Two enlarged ASA Aero swept fins | 5% gyroid wing infill; solid root and tape tabs |
+| 2 | Third enlarged ASA Aero swept fin | Same settings as plate 1 |
+| 3 | ASA Aero fin mounting test | Solid; print before the fins |
 
 ## Print the fit checks first
 
@@ -78,16 +79,115 @@ If a fit is wrong, tune `joint_radial_clearance`,
 and coupons, and replace their project meshes before slicing again.
 Clearances are **per side**. Do not change only the test mesh.
 
+## Reinforcement after the failed prints
+
+The three tube skins are now **1.8 mm**, doubled from 0.9 mm. The base
+wall is **2.8 mm** instead of 1.4 mm, female joint walls are **2.4 mm**
+instead of 1.2 mm, and male spigot walls are **2 mm** instead of 1 mm.
+The flange's locating spigot wall is also doubled to **2.8 mm**.
+The joint outside diameter increases from 14 to **16.4 mm**, and the
+base outside diameter from 20.4 to **23.2 mm**. This preserves the mating
+diameters and 0.50 mm diametral gaps in the table above, rather than
+weakening the male spigots by shrinking their outside diameter.
+All insertion depths and the 900/600 mm assembled lengths are unchanged.
+The 34 mm flange now leaves a **5.4 mm radial tape ledge** around the base.
+Use the regenerated fit coupons, not the older thin-wall prints.
+
+The TPU nose remains a **hollow 40 mm ball**, trimmed to 36 mm print height.
+Its spherical wall increases from 0.8 to **3.2 mm**. **100% infill applies
+to that shell and its mounting collar, not to the hollow center.** The
+18.50 mm mounting socket and seating stop remain unchanged. Local socket
+transitions do not have uniform spherical-wall thickness.
+
+The nose retains internal tree support because its inner spherical dome
+is not self-supporting. Support top/bottom Z separation is increased from
+0.3 to **0.4 mm**, and dense top interface layers are disabled to reduce
+TPU-to-TPU bonding. These are trial separation settings: they may leave a
+rougher inner dome, and do not guarantee easy support removal.
+Remove all support through the **17.30 mm stop opening** before fitting
+the nose. If support cannot be removed without damaging the shell, do
+not force assembly; a split nose or a self-supporting inner roof would
+require another geometry revision.
+
+These changes add material, not a strength certification. ASA Aero remains
+a foamed material. Check the actual spool is **Bambu ASA Aero**, not ABS;
+the retained 270 C / 0.52 flow profile is specific to ASA Aero. Dry the
+filament and check a short coupon for continuous extrusion and layer
+bonding before spending material on another 320 mm tube. Added thickness
+cannot compensate for wet filament, incorrect material settings, poor
+bonding, or bad bed adhesion. Do not change flow or scale by guesswork.
+
+## Center of mass: check the dry assembled rocket
+
+The thickened hollow nose is estimated at **16.2 g**, not the roughly
+35-40 g of a nearly solid TPU ball. The following are CAD material-volume
+estimates using the factory flow ratios (ASA Aero 0.52; TPU 1.00) and
+filament densities (0.99 and 1.22 g/cm3). They are not measured weights or
+whole-job slicer weights. They exclude removed supports/brims, bottle,
+fins, tape, parachute, payload, and water; foaming and toolpaths can change
+actual mass.
+
+The nose plate's slicer estimate is **18.1 g including support and brim**;
+that is not the retained nose mass used in the balance calculation.
+
+| Extension part | Estimated printed mass | Center above bottle-base mounting plane, 900 mm version |
+|---|---|---|
+| Lower tube | 14.5 g | 135 mm |
+| Middle tube | 11.0 g | 443 mm |
+| Upper tube | 10.4 g | 730 mm |
+| Flange | 1.7 g | 5.5 mm |
+| Hollow 3.2 mm TPU nose | 16.2 g | 881 mm |
+
+The coordinate origin is the **bottle-base/flange mounting plane**, not
+the bottle mouth. Positive positions point along the pipes toward the
+nose; most bottle-side components have negative positions. The end of
+the lower tube's main body is **288.1 mm** above this plane, excluding
+its male joint's insertion length.
+
+For illustration only, assume the combined bottle-side assembly has its
+center **110 mm below the flange** (the midpoint of the unmeasured
+220 mm example bottle). This is not a claim about the real bottle's
+center of mass:
+
+| Configuration | Extension mass | Extension-only center | Minimum bottle-side mass for center within lower tube | Minimum bottle-side mass for center within bottle |
+|---|---|---|---|---|
+| Three tubes, 900 mm | 53.8 g | 533 mm above flange | 33.2 g | 261 g |
+| Omit middle tube, 600 mm | 42.8 g | 370 mm above flange | 8.9 g | 145 g |
+
+These are **total bottle-side assembly masses**, not instructions to add
+that much ballast. Their assumed location is essential. For example,
+40 g centered 110 mm below the flange predicts a 259 mm balance point
+with the three-tube extension, inside the lowest tube; 30 g predicts
+303 mm, beyond that tube's main-body rim. Moving the same mass closer to
+the flange can fail the target.
+
+Use actual dry part masses and their axial centers:
+`z_CG = sum(mass * position) / sum(mass)`. For a lower assembly with mass
+`m_b` and center `z_b`, an extension of mass `M` and first moment `S`
+meets an upper balance limit `z_target` only if
+`m_b >= max(0, (S - M * z_target) / (z_target - z_b))`, with
+`z_b < z_target`. The estimated extension moments are **28,683 g*mm**
+for 900 mm and **15,843 g*mm** for 600 mm.
+
+**Bottle-side balance is not yet verified.** Weigh and gently balance the
+empty, fully assembled rocket with its actual fins, tape, payload and
+parachute, using a broad padded support. Check both launch and recovery
+configurations; do not count launch water as permanent balancing mass.
+If the full version misses the target, the already-compatible two-tube
+version reduces top weight and leverage without adding ballast.
+Do not add heavy ballast by guesswork. A lower center of mass is not
+proof of launch stability, upright descent, or impact safety; aerodynamic
+center of pressure and parachute deployment still require evaluation.
+
 ## Before sending a production plate
 
-The seven body/nose plates and the two separate fin plates were sliced
+The seven body/nose plates and the three separate fin plates were sliced
 and saved by the installed Bambu Studio 2.8.2.61 with no reported slicing
 warnings. Both projects include native G-code and regenerated thumbnails.
-Inspect the full layer preview before
-sending a job, and re-slice after any settings, mesh, or nozzle changes.
-Check continuous
-0.8 mm TPU and 0.9 mm ASA skins, connected joint roots, open bores, correct
-material and right-hotend mapping, bed adhesion, and a maximum height below
+Inspect the full layer preview before sending a job, and re-slice after
+any settings, mesh, or nozzle changes. Check continuous
+3.2 mm spherical TPU walls and 1.8 mm main ASA skins, connected joint roots,
+open bores, correct material and right-hotend mapping, bed adhesion, and a maximum height below
 the selected hotend's limit. Successful slicing does not verify physical
 fit, bed adhesion, strength, or support removability.
 
@@ -120,54 +220,58 @@ barrel. That barrel is a contact envelope, not a model of the complete bottle.
 The fin follows the black-lined outline in the latest reference photo:
 a smooth **S-curved swept outer edge**, narrower through the middle and
 fuller toward a rounded lower tip, with a straight bottom edge. It has a
-nominal **64 mm bottom edge** and an **84 mm bottle-facing root**.
-Thickness changes **continuously over the full fin height,
-from 1 mm at the top to 2.4 mm at the bottom**. It is a long, shallow wedge
-in side view, not a short reinforced band. Extra thickness is added on only
-one side, keeping the opposite print face flat.
+nominal **114.3 mm bottom edge** and a **150 mm bottle-facing root**.
+The planform is enlarged by **150/84 = 1.786 times** from the earlier
+84 x 64 mm design. The web is now **2 mm thick throughout**: there is no
+top-to-bottom wedge. The opposite print face remains flat.
 
 Two curved **rounded rectangular** tabs extend from **only one side** of
-the fin. Each is **20 mm tall along the root**, projects **5 mm sideways
+the fin. Each is **40 mm tall along the root**, projects **20 mm sideways
 from the fin's center plane**, and has **0.8 mm wall thickness**.
 One tab is at the top of the root and one at the bottom; the middle has no
-tab. The 20 mm tab height follows the revised request; the 5 mm dimension
-is its sideways extension.
+tab. The larger tabs retain their original thin walls; they are not made
+2 mm thick with the web.
 
-The upstream and downstream tab edges taper to **0.6 mm over 3 mm** to
-reduce the raised step under the tape. Fin planform corners have **2 mm**
-rounding, tab corners **0.8 mm**, and exposed three-dimensional edges
-approximately **0.2 mm** rounding. Rounding trims the sharp triangle tips;
-the 64 mm and 84 mm dimensions describe the nominal outline.
+The upstream and downstream tab edges taper to **0.6 mm over 5.36 mm**
+to reduce the raised step under the tape. Fin planform corners have
+**3.57 mm** rounding and tab corners **1.43 mm**. The exposed wing edges
+have **0.8 mm three-dimensional rounding**, increased from 0.2 mm for a
+smoother edge profile; tab edges retain **0.2 mm** rounding to preserve
+their thin walls. The swept curve also uses twice as many samples.
+Rounding trims the sharp outline tips; 114.3 mm and 150 mm are nominal
+planform dimensions.
 Inspect actual prints for burrs and damaged edges. Rounded plastic can
 still injure someone; keep people clear of launch and recovery areas.
 
-The thicker bottom adds weight and stiffness, **not a proven aerodynamic
-benefit**. Extra tail mass can shift the center of mass rearward and does
-not guarantee stability. This wedge is not a validated airfoil or a
-CFD-validated drag improvement. Smooth tape edges, axial alignment, and equal
-120-degree spacing remain important. The thinner tabs also have less
-material for retention; verify them with the mounting test rather than
-assuming the original strength.
+The larger fins add area and mass, **not a proven aerodynamic benefit**.
+Extra tail mass can shift the center of mass rearward and does not
+guarantee stability. A constant-thickness rounded plate is not a validated
+airfoil or a CFD-validated drag improvement. Smooth tape edges, axial
+alignment, and equal 120-degree spacing remain important. The larger tabs
+still have thin 0.8 mm walls; more attachment area does not establish
+impact strength. Verify them with the mounting test.
 The 3 mm cardboard used on a hand-built rocket is a dimensional reference,
-not evidence that these thinner foamed-ASA fins have equivalent stiffness.
+not evidence that these 2 mm foamed-ASA fins have equivalent stiffness.
 The curved outline removes abrupt changes in edge direction, but it is
-not proof of lower drag than a straight triangular fin. The taper remains
-one-sided for flat printing, not a symmetric airfoil. Whole-rocket center
+not proof of lower drag than a straight triangular fin. The wing has no
+axial thickness taper, and its tape tabs remain one-sided. Whole-rocket center
 of mass and center of pressure, stiffness and flight testing determine
 whether this planform is suitable; three identical fins must be aligned.
 
 **The bottle dimensions are not yet measured.** The file uses an explicitly
-editable **220 mm example bottle height**, an independent 84 mm root, and a
+editable **220 mm example bottle height**, an independent 150 mm root, and a
 nominal **68 mm cylindrical barrel** matching the earlier bottle-diameter
 assumption. These are placeholders, not a verified contour fit or a claim
 that the bottle is 220 mm tall.
 
 Assembly coordinates measure from the **mouth/nozzle plane**, toward the
-bottle base. The default fin and both tabs occupy **100-184 mm** from that
-plane, so their lowest point is 100 mm above it, exceeding the required
-55 mm clearance. This conservative placement avoids guessing the shoulder
-shape. The 64 mm dimension is the fin's radial bottom-edge length, **not**
-its distance from the mouth.
+bottle base. The provisional fin and both tabs occupy **60-210 mm** from
+that plane, leaving the lowest point 60 mm above it and exceeding the
+required 55 mm clearance. The previous 100 mm start would place the
+150 mm root beyond the example bottle's base, so the default start moves
+to 60 mm. **This may reach the bottle shoulder; it is not a verified
+barrel fit.** Measure the complete longer contact region before printing.
+The 114.3 mm dimension is radial span, not distance from the mouth.
 
 Before printing production fins, enter the actual `bottle_height` and set
 `root_start` to put the mounting edge on the intended bottle surface.
@@ -178,28 +282,32 @@ along that mounting edge: the first distance is zero and the last is
 Both the root and curved tabs follow these measurements, with 0.3 mm radial
 clearance. Re-export **both** meshes and replace their project objects after
 changing the source; the fin project includes three copies of the same fin mesh.
-Its solid-root modifiers cover the first 6 mm outside the nominal barrel
+Its solid-root modifiers cover the first 10.7 mm outside the nominal barrel
 contact edge; reposition or reshape these modifiers if the bottle contour changes.
 
-Print **fin-project plate 2 first**, hold its full mounting edge against the bottle,
+Print **fin-project plate 3 first**, hold its full mounting edge against the bottle,
 and check both curved tab locations without bending or forcing the fit.
 If the reference bottle is not cylindrical at these locations, update the
 profile rather than bridging a large gap with tape. Once the mounting test
-fits, print fin-project plate 1 and install the three fins at 120-degree spacing with
+fits, print fin-project plates 1 and 2 and install the three fins at 120-degree spacing with
 their bottom edges level and their planes parallel to the bottle axis.
 Apply Scotch tape over each tab and onto clean adjacent bottle surface;
 keep tape and all printed material clear of the launcher.
 
-Print the fins flat with tabs and the slanted face upward. The fin
+Print the fins flat with tabs upward. The fin
 objects use **5% gyroid infill**, two wall loops and two top/bottom
 layers at 0.20 mm layer height. A **100% infill modifier with three wall
-loops** reinforces the full **6 mm-wide bottle-facing root band** and both
-tape tabs. The mounting-test coupon is entirely solid. The 1-2.4 mm wing
+loops** reinforces the full **10.7 mm-wide bottle-facing root band** and both
+tape tabs. The mounting-test coupon is entirely solid. The 2 mm wing
 still needs solid skins, so 5% infill does not mean 95% less fin weight.
-Bambu Studio estimates **5.82 g for the three-fin plate**, including
-brims, and **0.59 g for the mounting-test plate**.
-These are slicer estimates, not measured foamed-part weights. Both fin
-plates use only ASA Aero slot 1; the retained TPU slot is unused.
+All three fin-project plates use only ASA Aero slot 1; the retained TPU
+slot is unused. The enlarged fins are split across two production plates
+to leave room for their brims rather than squeezing three into one row.
+Bambu Studio estimates **12.42 g** for the two-fin plate, **6.22 g** for
+the third-fin plate, and **2.21 g** for the mounting-test plate, including
+brims. These are slicer estimates, not measured foamed-part weights.
+Repeat the dry assembled balance check with these enlarged fins; the
+extension-only mass table above does not include them.
 The thin foamed-ASA attachment tabs can bend or break; no flight-load or
 tape-retention rating is established. The photo and these dimensions do not establish
 aerodynamic stability. Check event rules, launcher clearance, tape adhesion,

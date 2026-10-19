@@ -1,4 +1,4 @@
-// Lightweight bottle-bottom nose extension. Dimensions are in millimeters.
+// Reinforced bottle-bottom nose extension. Dimensions are in millimeters.
 // Export lower_body, middle_body, upper_body, and flange in Bambu ASA Aero;
 // nose in TPU 95A. Use the ASA Aero profile, NOT ABS or ordinary ASA.
 // Never print the full assembly as one piece.
@@ -6,7 +6,7 @@
 // print it with the flange to check both socket fit and bottle seating.
 // Defaults: 900 mm assembled, or 600 mm with the middle section removed.
 // The middle adds exactly 300 mm; its 20 mm spigot makes print height 320 mm.
-// With an assumed 68 mm bottle: 34 mm flange, 20.4 mm base, 12 mm waist.
+// With an assumed 68 mm bottle: 34 mm flange, 23.2 mm base, 12 mm waist.
 // The flange has a flat tape-facing top and a contoured bottle-facing underside.
 // Mass depends on ASA Aero foaming, flow, temperature, and sliced walls.
 // Use the calibrated slicer estimate; solid ABS density is not applicable.
@@ -27,9 +27,9 @@
 // printer height limit.
 // Use approximately
 // 0.2 mm layers, a brim, and the enclosed H2C ASA Aero profile (270 C,
-// 0.52 flow ratio). Inspect sliced thin walls;
-// use perimeter printing, not vase mode. TPU: print flat opening down, using
-// removable internal support if your slicer requires it for the upper dome.
+// 0.52 flow ratio). Inspect continuous walls; use perimeter printing, not vase
+// mode. TPU: print flat opening down at 100% infill within the thick shell.
+// The center remains hollow; internal dome support still needs removal.
 // Print the flange bottle-contact side down with local support beneath its
 // shallow contours (only a few millimeters tall). Do not invert the flange.
 // No infill is intended in the hollow cavities. Do not scale individual parts.
@@ -48,7 +48,7 @@
 // The longer, narrow tube is more flexible; geometry alone does not establish
 // launch/impact strength or rule compliance. Test before flight.
 // PROTOTYPE ONLY: not qualified for repeated launches or 20 m drops.
-// The 900 mm length, thin foamed ASA walls, layer bonding, and tape-retained joints
+// The 900 mm length, foamed ASA walls, layer bonding, and tape-retained joints
 // can fail under bending or impact. A TPU nose is not a validated crash absorber.
 // Tape does not have a calculated safety rating here; do not
 // sand, heat, cut, glue, or otherwise damage the pressurized bottle.
@@ -58,11 +58,10 @@
 // "3M tape" does not specify adhesion, peel strength, or ASA/TPU compatibility.
 // Neither a safe tape load nor 20 m impact survival is established by this CAD.
 // Fit-test, verify nose retention, and test progressively in a controlled area.
-// A TPU shell alone does not provide enough travel to guarantee shock absorption.
-// The nose is hollow with a lightweight 0.8 mm skin and a thicker socket collar.
-// Reduced top mass does NOT guarantee upright descent: aerodynamic balance,
-// bottle mass, parachute behavior, and launch orientation require drop testing.
-// Check the sliced TPU skin for continuous walls; thinner skin is less durable.
+// The 3.2 mm TPU shell is not a validated shock absorber and adds nose mass.
+// Bottle/payload masses and locations are needed to determine assembled balance.
+// A low center of mass does NOT guarantee upright descent or stable launch.
+// Aerodynamic balance, parachute behavior and orientation require flight testing.
 
 /* [Export] */
 part = "assembly"; // [assembly, lower_body, middle_body, upper_body, flange, nose, fit_test, joint_lower_test, joint_upper_test, nose_neck_test, nose_socket_test]
@@ -73,24 +72,24 @@ include_middle = true; // Assembly preview only; individual exports never change
 assembled_height = 900; // Full assembly, including the TPU nose.
 middle_length = 300; // Added assembled length; excludes the male spigot.
 ball_diameter = 40;
-body_wall = 0.9;
-nose_wall = 0.8;
+body_wall = 1.8;
+nose_wall = 3.2; // Four times the original 0.8 mm skin; keep the center hollow.
 waist_diameter = 12;
 
 /* [Interchangeable tube joints] */
-joint_diameter = 14; // Common outside diameter at both mating rims.
-joint_socket_wall = 1.2;
+joint_diameter = 16.4; // Wider outside preserves the original 11.6 mm socket ID.
+joint_socket_wall = 2.4;
 joint_overlap = 20;
 joint_radial_clearance = 0.25; // PER SIDE; tape retains this clearance fit.
-joint_wall = 1;
+joint_wall = 2;
 joint_root_height = 4; // Tapered reinforcement avoids a sharp internal shelf.
 joint_test_margin = 8;
 printer_max_height = 325;
 
 /* [Bottle seat - measure your bottle] */
 bottle_diameter = 68; // Assumed Coca-Cola 1 L outside diameter, not verified.
-base_diameter_fraction = 0.3; // Tube base is 20.4 mm for a 68 mm bottle.
-base_wall = 1.4;
+base_diameter_fraction = 23.2 / 68; // Preserve the 17.6 mm base bore with 2.8 mm walls.
+base_wall = 2.8;
 base_skirt_height = 22;
 seat_feet = 5;
 seat_dome_height = 5; // Height of central recess above the lowest feet.
@@ -100,10 +99,10 @@ seat_clearance = 0; // Vertical clearance; tape bridges any remaining gap.
 fit_test_height = 16;
 
 /* [Horizontal tape flange] */
-flange_diameter_fraction = 0.5; // Half bottle width; 6.8 mm tape ledge around the tube.
+flange_diameter_fraction = 0.5; // Half bottle width; 5.4 mm tape ledge around the tube.
 flange_thickness = 1.2; // Minimum stock above the highest bottle-seat contour.
 flange_collar_height = 6;
-flange_collar_wall = 1.4;
+flange_collar_wall = 2.8;
 flange_radial_clearance = 0.25; // PER SIDE; flange spigot slips inside the tube.
 flange_radial_steps = 20;
 
@@ -524,4 +523,9 @@ echo(str("Standard joint: female ID=", 2 * joint_socket_radius,
 echo(str("Print heights: lower=", split_height + joint_overlap - body_start,
          " mm; middle=", middle_length + joint_overlap,
          " mm; upper=", body_height - split_height, " mm"));
+echo(str("Reinforced walls: body=", body_wall, " mm; base=", base_wall,
+         " mm; socket=", joint_socket_wall, " mm; spigot=", joint_wall, " mm."));
+echo(str("Hollow TPU nose: ", nose_wall,
+         " mm shell at 100% infill; remove internal dome support before assembly."));
+echo("WARNING: thicker nose raises top mass; bottle-side balance must be measured, not assumed.");
 echo("WARNING: approximate bottle seat; verify fit, rules, tape and impact behavior.");
