@@ -1,11 +1,28 @@
 # H2C printing and fit checks
 
-Use **Bambu ASA Aero** for the three tubes, flange, fins, and rigid fit coupons;
-use **Bambu TPU 95A** for the nose and its socket coupon. ASA Aero is a
+The original material reference uses **Bambu ASA Aero** for the three
+tubes, flange, fins, and rigid fit coupons, and **Bambu TPU 95A** for the
+nose and its socket coupon. The customized TPU trial is described below.
+ASA Aero is a
 foaming material, not ABS or ordinary ASA. The TPU profile is for regular
 95A, not 95A HF or TPU for AMS.
 
 ## Project setup
+
+**Current customized body/nose project:** the 1.6 mm revision preserves
+your existing plate settings, material profiles, object copies and
+positions, including the empty placeholder plates. Production tubes,
+flange, noses and the fins copied into this project remain assigned to
+the **Bambu TPU 95A** profile; the rigid fit coupons retain **Generic ABS**.
+No TPU 98-specific profile has been selected or calibrated. Existing
+plate titles are also preserved and may mention the previous wall sizes.
+The ABS-assigned coupons do not establish how TPU tube joints will fit
+or flex. To validate a TPU trial, print its joint coupons in the actual
+tube material using the appropriate profile; assignments are not changed
+automatically by this geometry-only revision.
+The ASA Aero/right-hotend setup and seven-plate table below describe the
+original reference configuration, not the current customized arrangement.
+The separate `PingPongParachute-Fins.3mf` remains unchanged in ASA Aero.
 
 `PingPongParachute.3mf` targets the H2C with 0.4 mm nozzles and 0.20 mm
 layers. Each plate uses only the **right hotend**, including the 320 mm
@@ -33,7 +50,7 @@ substitute for checking actual foaming and layer bonding.
 
 | Plate | Contents | Notes |
 |---|---|---|
-| 1 | TPU nose | Hollow 3.2 mm shell, 100% shell infill; opening down; internal tree support; 5 mm brim |
+| 1 | TPU nose | Hollow 1.6 mm shell, 100% shell infill; opening down; internal tree support; 5 mm brim |
 | 2 | ASA Aero middle tube | Female socket down; 320 mm tall |
 | 3 | ASA Aero upper tube | Nose neck down; 281.9 mm tall |
 | 4 | ASA Aero lower tube | Base down; 301.9 mm tall |
@@ -81,7 +98,8 @@ Clearances are **per side**. Do not change only the test mesh.
 
 ## Reinforcement after the failed prints
 
-The three tube skins are now **1.8 mm**, doubled from 0.9 mm. The base
+The three main tube skins are now **1.6 mm**, reduced by 0.2 mm from the
+reinforced 1.8 mm version and still thicker than the original 0.9 mm. The base
 wall is **2.8 mm** instead of 1.4 mm, female joint walls are **2.4 mm**
 instead of 1.2 mm, and male spigot walls are **2 mm** instead of 1 mm.
 The flange's locating spigot wall is also doubled to **2.8 mm**.
@@ -94,7 +112,8 @@ The 34 mm flange now leaves a **5.4 mm radial tape ledge** around the base.
 Use the regenerated fit coupons, not the older thin-wall prints.
 
 The TPU nose remains a **hollow 40 mm ball**, trimmed to 36 mm print height.
-Its spherical wall increases from 0.8 to **3.2 mm**. **100% infill applies
+Its spherical wall is now **1.6 mm**, half the previous 3.2 mm shell, to
+reduce rigidity while retaining the hollow center. **100% infill applies
 to that shell and its mounting collar, not to the hollow center.** The
 18.50 mm mounting socket and seating stop remain unchanged. Local socket
 transitions do not have uniform spherical-wall thickness.
@@ -119,24 +138,27 @@ bonding, or bad bed adhesion. Do not change flow or scale by guesswork.
 
 ## Center of mass: check the dry assembled rocket
 
-The thickened hollow nose is estimated at **16.2 g**, not the roughly
-35-40 g of a nearly solid TPU ball. The following are CAD material-volume
-estimates using the factory flow ratios (ASA Aero 0.52; TPU 1.00) and
-filament densities (0.99 and 1.22 g/cm3). They are not measured weights or
+The 1.6 mm hollow nose is estimated at **9.6 g** using the retained
+TPU 95A profile's density, compared with 16.2 g for the previous 3.2 mm
+shell. The following reference table assumes **ASA Aero tubes/flange
+and a TPU 95A nose**, using factory flow ratios (0.52 and 1.00) and
+filament densities (0.99 and 1.22 g/cm3). These are CAD material-volume
+estimates, not the current all-TPU tube configuration, measured weights or
 whole-job slicer weights. They exclude removed supports/brims, bottle,
 fins, tape, parachute, payload, and water; foaming and toolpaths can change
 actual mass.
 
-The nose plate's slicer estimate is **18.1 g including support and brim**;
-that is not the retained nose mass used in the balance calculation.
+The customized nose plate contains several noses and fins. Its job total
+includes those copies, support, brims and purging, not just one retained
+nose. A flying assembly uses one nose, not every copy on the plate.
 
 | Extension part | Estimated printed mass | Center above bottle-base mounting plane, 900 mm version |
 |---|---|---|
-| Lower tube | 14.5 g | 135 mm |
-| Middle tube | 11.0 g | 443 mm |
-| Upper tube | 10.4 g | 730 mm |
+| Lower tube | 13.3 g | 134 mm |
+| Middle tube | 10.1 g | 443 mm |
+| Upper tube | 9.5 g | 728 mm |
 | Flange | 1.7 g | 5.5 mm |
-| Hollow 3.2 mm TPU nose | 16.2 g | 881 mm |
+| Hollow 1.6 mm TPU nose | 9.6 g | 880 mm |
 
 The coordinate origin is the **bottle-base/flange mounting plane**, not
 the bottle mouth. Positive positions point along the pipes toward the
@@ -151,23 +173,34 @@ center of mass:
 
 | Configuration | Extension mass | Extension-only center | Minimum bottle-side mass for center within lower tube | Minimum bottle-side mass for center within bottle |
 |---|---|---|---|---|
-| Three tubes, 900 mm | 53.8 g | 533 mm above flange | 33.2 g | 261 g |
-| Omit middle tube, 600 mm | 42.8 g | 370 mm above flange | 8.9 g | 145 g |
+| ASA Aero tubes/flange, TPU nose, 900 mm | 44.2 g | 489 mm above flange | 22.3 g | 197 g |
+| ASA Aero tubes/flange, TPU nose, 600 mm | 34.1 g | 335 mm above flange | 4.1 g | 104 g |
+| All TPU 95A reference, 900 mm | 91.6 g | 433 mm above flange | 33.4 g | 361 g |
+| All TPU 95A reference, 600 mm | 67.6 g | 288 mm above flange | 0 g nominally | 177 g |
+
+The all-TPU rows use the retained TPU 95A profile's density and flow,
+including TPU for the flange. They are **not calibrated TPU 98 estimates**.
+The compact all-TPU extension's nominal center is only about 0.6 mm
+inside the lower-tube limit without a bottle: this is not a useful
+manufacturing or flight-safety margin.
 
 These are **total bottle-side assembly masses**, not instructions to add
 that much ballast. Their assumed location is essential. For example,
-40 g centered 110 mm below the flange predicts a 259 mm balance point
-with the three-tube extension, inside the lowest tube; 30 g predicts
-303 mm, beyond that tube's main-body rim. Moving the same mass closer to
-the flange can fail the target.
+with the ASA Aero/TPU reference extension, 30 g centered 110 mm below
+the flange predicts a 247 mm balance point, inside the lowest tube;
+20 g predicts 302 mm, beyond that tube's main-body rim.
+For the full all-TPU reference, 40 g at that location predicts 268 mm,
+whereas 30 g predicts 299 mm. Moving the same mass closer to the flange
+can fail the target.
 
 Use actual dry part masses and their axial centers:
 `z_CG = sum(mass * position) / sum(mass)`. For a lower assembly with mass
 `m_b` and center `z_b`, an extension of mass `M` and first moment `S`
 meets an upper balance limit `z_target` only if
 `m_b >= max(0, (S - M * z_target) / (z_target - z_b))`, with
-`z_b < z_target`. The estimated extension moments are **28,683 g*mm**
-for 900 mm and **15,843 g*mm** for 600 mm.
+`z_b < z_target`. The ASA Aero/TPU reference extension moments are
+**21,600 g*mm** for 900 mm and **11,408 g*mm** for 600 mm; the all-TPU
+reference moments are **39,671 g*mm** and **19,445 g*mm**, respectively.
 
 **Bottle-side balance is not yet verified.** Weigh and gently balance the
 empty, fully assembled rocket with its actual fins, tape, payload and
@@ -181,12 +214,14 @@ center of pressure and parachute deployment still require evaluation.
 
 ## Before sending a production plate
 
-The seven body/nose plates and the three separate fin plates were sliced
-and saved by the installed Bambu Studio 2.8.2.61 with no reported slicing
-warnings. Both projects include native G-code and regenerated thumbnails.
+The body/nose geometry revision invalidates its affected plate caches.
+**Re-slice occupied plates in Bambu Studio before printing.** Empty
+placeholder plates and all your current plate settings are retained.
+Occupied layouts were checked in a temporary copy without changing the
+saved layout. The separate fin project's saved slicing is unchanged.
 Inspect the full layer preview before sending a job, and re-slice after
 any settings, mesh, or nozzle changes. Check continuous
-3.2 mm spherical TPU walls and 1.8 mm main ASA skins, connected joint roots,
+1.6 mm spherical nose walls and 1.6 mm main tube skins, connected joint roots,
 open bores, correct material and right-hotend mapping, bed adhesion, and a maximum height below
 the selected hotend's limit. Successful slicing does not verify physical
 fit, bed adhesion, strength, or support removability.

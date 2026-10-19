@@ -58,7 +58,7 @@
 // "3M tape" does not specify adhesion, peel strength, or ASA/TPU compatibility.
 // Neither a safe tape load nor 20 m impact survival is established by this CAD.
 // Fit-test, verify nose retention, and test progressively in a controlled area.
-// The 3.2 mm TPU shell is not a validated shock absorber and adds nose mass.
+// The 1.6 mm TPU shell is not a validated shock absorber.
 // Bottle/payload masses and locations are needed to determine assembled balance.
 // A low center of mass does NOT guarantee upright descent or stable launch.
 // Aerodynamic balance, parachute behavior and orientation require flight testing.
@@ -72,8 +72,8 @@ include_middle = true; // Assembly preview only; individual exports never change
 assembled_height = 900; // Full assembly, including the TPU nose.
 middle_length = 300; // Added assembled length; excludes the male spigot.
 ball_diameter = 40;
-body_wall = 1.8;
-nose_wall = 3.2; // Four times the original 0.8 mm skin; keep the center hollow.
+body_wall = 1.6;
+nose_wall = 1.6; // More flexible than the previous 3.2 mm shell; center stays hollow.
 waist_diameter = 12;
 
 /* [Interchangeable tube joints] */
