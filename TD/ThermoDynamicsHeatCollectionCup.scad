@@ -7,17 +7,28 @@
 inch = 25.4;
 
 // ---------- Foam-box socket and cup opening ----------
-base_width = 3.95 * inch;
-base_height = 1 * inch;
+socket_opening_width = 5 * inch;
+socket_depth = 2.7 * inch;
+socket_side_clearance = 0.5;
+socket_bottom_clearance = 0.5;
+base_width = socket_opening_width - 2 * socket_side_clearance;
+base_height = socket_depth - socket_bottom_clearance;
+sealing_lip_overlap = 3;
+sealing_lip_width = socket_opening_width + 2 * sealing_lip_overlap;
+sealing_lip_thickness = 3.2;
 cup_hole_diameter = 70;
-reflector_start_height = 0.5 * inch;
 
 // ---------- Optical layout ----------
-focus_above_device_bottom = 30;
+// Heights above the box include the lip and reflector, but not a cover.
+// Reserve 20 mm below the stated limit for reflective glass and mounting.
+maximum_height_above_box = 100;
+collector_height_above_box = 80;
 standard_cup_height = 95;
 reflector_above_cup = 10;
-overall_height =
-    standard_cup_height + reflector_above_cup;
+overall_height = base_height + collector_height_above_box;
+cup_support_height =
+    overall_height - standard_cup_height - reflector_above_cup;
+focus_above_device_bottom = cup_support_height + 30;
 source_above_rim = 170;
 maximum_rim_diameter = 285;
 
@@ -32,22 +43,24 @@ cup_hole_radius = cup_hole_diameter / 2;
 target_z = focus_above_device_bottom;
 source_z = overall_height + source_above_rim;
 
-// The reflector begins 0.5 inch above the bottom at the edge of the
-// 70 mm cup opening. The sum of distances from that point to both foci
-// defines the ellipse.
+// Constrain the ellipse at the socket top so the submerged shell fits
+// inside the square. Allow a full wall thickness in both directions
+// for the outward/downward normal offset of the outer surface.
+socket_fit_z = base_height + reflector_wall_thickness;
+socket_fit_radius = base_width / 2 - reflector_wall_thickness;
 ellipse_a =
     (
         sqrt(
-            pow(cup_hole_radius, 2)
+            pow(socket_fit_radius, 2)
             + pow(
-                reflector_start_height - target_z,
+                socket_fit_z - target_z,
                 2
             )
         )
         + sqrt(
-            pow(cup_hole_radius, 2)
+            pow(socket_fit_radius, 2)
             + pow(
-                reflector_start_height - source_z,
+                socket_fit_z - source_z,
                 2
             )
         )
@@ -89,6 +102,7 @@ function shell_outer_z(r) =
     - reflector_wall_thickness
     / sqrt(1 + pow(reflector_slope(r), 2));
 
+reflector_start_height = reflector_z(cup_hole_radius);
 optical_rim_radius = reflector_radius(overall_height);
 outer_rim_radius = shell_outer_r(optical_rim_radius);
 profile_steps =
@@ -102,11 +116,16 @@ function profile_r(i) =
     + (optical_rim_radius - cup_hole_radius)
     * i / profile_steps;
 
+assert(socket_fit_radius > cup_hole_radius
+        && socket_fit_z < overall_height,
+    "The socket must surround the lower bowl below the rim.");
 assert(abs(
-        reflector_z(cup_hole_radius)
-        - reflector_start_height
+        reflector_radius(socket_fit_z) - socket_fit_radius
     ) < 0.01,
-    "The reflector does not meet the cup opening.");
+    "The reflector does not meet the socket fit constraint.");
+assert(reflector_radius(socket_fit_z) + reflector_wall_thickness
+        <= base_width / 2 + 0.01,
+    "The submerged reflector shell must fit inside the square insert.");
 assert(abs(
         reflector_z(optical_rim_radius)
         - overall_height
@@ -114,25 +133,58 @@ assert(abs(
     "The reflector does not reach the requested height.");
 assert(2 * outer_rim_radius <= maximum_rim_diameter,
     "The reflector exceeds the maximum allowed diameter.");
+assert(collector_height_above_box > reflector_above_cup
+        && collector_height_above_box <= maximum_height_above_box,
+    "The collector must fit below the above-box height limit.");
 assert(base_width > cup_hole_diameter,
     "The square base must surround the cup opening.");
+assert(socket_side_clearance > 0
+        && socket_bottom_clearance > 0,
+    "The socket needs side and bottom clearance for insertion.");
+assert(base_height > 0 && base_height < socket_depth,
+    "The insert must fit within the recess depth.");
+assert(sealing_lip_width > socket_opening_width,
+    "The lip must cover the entire socket opening.");
+assert(cup_support_height >= reflector_wall_thickness
+        && cup_support_height < reflector_start_height,
+    "The cup needs a solid floor below the reflector opening.");
+assert(reflector_start_height < base_height,
+    "The bowl must begin inside the foam-box recess.");
 
 module socket_base() {
     difference() {
-        translate([
-            -base_width / 2,
-            -base_width / 2,
-            0
-        ])
-            cube([
-                base_width,
-                base_width,
-                base_height
-            ]);
+        union() {
+            translate([
+                -base_width / 2,
+                -base_width / 2,
+                0
+            ])
+                cube([
+                    base_width,
+                    base_width,
+                    base_height
+                ]);
 
-        translate([0, 0, -1])
+            // The lip rests on the box top and covers the insertion
+            // clearance; the insert stops short of the recess floor.
+            translate([
+                -sealing_lip_width / 2,
+                -sealing_lip_width / 2,
+                base_height
+            ])
+                cube([
+                    sealing_lip_width,
+                    sealing_lip_width,
+                    sealing_lip_thickness
+                ]);
+        }
+
+        // Stop the cup well at its support floor instead of cutting
+        // through the base. This also keeps the focus 30 mm above it.
+        translate([0, 0, cup_support_height])
             cylinder(
-                h = base_height + 2,
+                h = base_height + sealing_lip_thickness
+                    - cup_support_height + 1,
                 d = cup_hole_diameter
             );
 
@@ -199,8 +251,28 @@ if ($preview) {
 echo(str("Square base: ",
     base_width, " x ", base_width,
     " x ", base_height, " mm"));
+echo(str("Foam-box opening: ",
+    socket_opening_width, " x ", socket_opening_width,
+    " mm; recess depth: ", socket_depth, " mm"));
+echo(str("Insertion clearance per side / below: ",
+    socket_side_clearance, " / ", socket_bottom_clearance, " mm"));
+echo(str("Gap-covering lip: ",
+    sealing_lip_width, " x ", sealing_lip_width,
+    " x ", sealing_lip_thickness, " mm"));
+echo(str("Reflector rim above box top: ",
+    overall_height - base_height, " mm"));
+echo(str("Nominal cup top above box top: ",
+    cup_support_height + standard_cup_height - base_height, " mm"));
+echo(str("Remaining above-rim allowance for cover and mounting: ",
+    maximum_height_above_box - collector_height_above_box, " mm"));
+echo(str("Bowl start below box top: ",
+    base_height - reflector_start_height, " mm"));
 echo(str("Cup opening: ",
     cup_hole_diameter, " mm"));
+echo(str("Closed cup-support floor above device bottom: ",
+    cup_support_height, " mm"));
+echo(str("Optical focus above cup-support floor: ",
+    target_z - cup_support_height, " mm"));
 echo(str("Reflector start above device bottom: ",
     reflector_start_height, " mm"));
 echo(str("Focus above device bottom: ",

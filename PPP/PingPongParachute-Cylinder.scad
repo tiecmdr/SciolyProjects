@@ -76,11 +76,14 @@ body_wall = 1.6;
 nose_wall = 1.6; // More flexible than the previous 3.2 mm shell; center stays hollow.
 waist_diameter = 12;
 
+/* [Connector fit] */
+male_diameter_increase = 0.4; // Total OD increase on all three male connectors; holes unchanged.
+
 /* [Interchangeable tube joints] */
 joint_diameter = 16.4; // Wider outside preserves the original 11.6 mm socket ID.
 joint_socket_wall = 2.4;
 joint_overlap = 20;
-joint_radial_clearance = 0.25; // PER SIDE; tape retains this clearance fit.
+joint_radial_clearance = 0.25; // PER SIDE before male enlargement; tape retains the fit.
 joint_wall = 2;
 joint_root_height = 4; // Tapered reinforcement avoids a sharp internal shelf.
 joint_test_margin = 8;
@@ -103,13 +106,13 @@ flange_diameter_fraction = 0.5; // Half bottle width; 5.4 mm tape ledge around t
 flange_thickness = 1.2; // Minimum stock above the highest bottle-seat contour.
 flange_collar_height = 6;
 flange_collar_wall = 2.8;
-flange_radial_clearance = 0.25; // PER SIDE; flange spigot slips inside the tube.
+flange_radial_clearance = 0.25; // PER SIDE before male enlargement.
 flange_radial_steps = 20;
 
 /* [TPU socket] */
 neck_diameter = 18;
 socket_overlap = 6;
-socket_radial_clearance = 0.25; // Clearance PER SIDE; tune with a fit print.
+socket_radial_clearance = 0.25; // PER SIDE before male enlargement; fixes the nose hole.
 socket_wall = 2.4;
 socket_stop_height = 1.2;
 nose_bottom_trim = 4; // Remove the lowest 4 mm of the 40 mm sphere.
@@ -121,11 +124,13 @@ $fn = angular_segments;
 
 base_radius = bottle_diameter * base_diameter_fraction / 2;
 flange_radius = bottle_diameter * flange_diameter_fraction / 2;
-flange_spigot_radius = base_radius - base_wall - flange_radial_clearance;
+flange_spigot_radius = base_radius - base_wall - flange_radial_clearance +
+                       male_diameter_increase / 2;
 flange_bore_radius = flange_spigot_radius - flange_collar_wall;
 body_start = seat_dome_height + seat_clearance + flange_thickness;
 flange_height = body_start + flange_collar_height;
 neck_radius = neck_diameter / 2;
+neck_spigot_radius = neck_radius + male_diameter_increase / 2;
 ball_radius = ball_diameter / 2;
 nose_height = ball_diameter - nose_bottom_trim;
 compact_height = assembled_height - middle_length;
@@ -147,6 +152,11 @@ assert(part == "assembly" || part == "lower_body" || part == "middle_body" ||
        "Unknown part selector; export the three tube sections separately.");
 assert(angular_segments >= 40 && body_steps >= 40, "Mesh quality is too low.");
 assert(body_wall > 0 && nose_wall > 0 && nose_wall < ball_radius);
+assert(male_diameter_increase >= 0 &&
+       male_diameter_increase / 2 < min(joint_radial_clearance,
+                                      flange_radial_clearance,
+                                      socket_radial_clearance),
+       "Male enlargement must leave positive clearance at all three sockets.");
 assert(base_wall >= body_wall && base_radius > base_wall);
 assert(base_radius > neck_radius && waist_diameter / 2 > body_wall);
 assert(seat_feet >= 3 && floor(seat_feet) == seat_feet);
@@ -164,7 +174,7 @@ assert(fit_test_height <= base_skirt_height);
 assert(nose_bottom_trim > 0 && nose_bottom_trim < ball_radius);
 assert(socket_overlap > 0 && socket_overlap + socket_stop_height < nose_height);
 assert(socket_radial_clearance >= 0 && socket_wall > 0);
-assert(neck_radius - body_wall > 0.5);
+assert(neck_spigot_radius - body_wall > 0.5);
 assert(body_height > base_skirt_height + 100 && body_height <= assembled_height);
 assert(base_diameter_fraction > 0 && base_diameter_fraction <= 1);
 assert(socket_outer_radius <
@@ -172,7 +182,7 @@ assert(socket_outer_radius <
             pow(ball_radius - nose_bottom_trim, 2)),
        "Socket must fit inside the trimmed sphere's bottom rim.");
 assert(socket_radius - 0.6 > 0 &&
-       socket_radius - 0.6 < neck_radius,
+       socket_radius - 0.6 < neck_spigot_radius,
        "Socket stop must overlap the ASA collar.");
 assert(joint_overlap > 0 && joint_wall > 0 && joint_root_height > 0 &&
        joint_radial_clearance >= 0 && joint_test_margin > joint_root_height);
@@ -188,7 +198,8 @@ assert(split_height + joint_overlap - body_start <= printer_max_height &&
 
 joint_outer_radius = joint_diameter / 2;
 joint_socket_radius = joint_outer_radius - joint_socket_wall;
-joint_spigot_radius = joint_socket_radius - joint_radial_clearance;
+joint_spigot_radius = joint_socket_radius - joint_radial_clearance +
+                      male_diameter_increase / 2;
 joint_bore_radius = joint_spigot_radius - joint_wall;
 assert(joint_bore_radius > 0, "Joint wall leaves no hollow center.");
 
@@ -205,8 +216,8 @@ profile = [
     [body_height - 40, waist_diameter / 2 + 0.5],
     [body_height - 16, 12],
     [body_height - socket_overlap - 2, 11],
-    [body_height - socket_overlap, neck_radius],
-    [body_height, neck_radius]
+    [body_height - socket_overlap, neck_spigot_radius],
+    [body_height, neck_spigot_radius]
 ];
 assert(body_height * 0.37 < split_height - joint_root_height &&
        split_height + joint_overlap + joint_root_height < body_height * 0.64,
@@ -525,6 +536,10 @@ echo(str("Print heights: lower=", split_height + joint_overlap - body_start,
          " mm; upper=", body_height - split_height, " mm"));
 echo(str("Reinforced walls: body=", body_wall, " mm; base=", base_wall,
          " mm; socket=", joint_socket_wall, " mm; spigot=", joint_wall, " mm."));
+echo(str("Connector male ODs / female IDs: joint=", 2 * joint_spigot_radius,
+         "/", 2 * joint_socket_radius, " mm; flange=", 2 * flange_spigot_radius,
+         "/", 2 * (base_radius - base_wall), " mm; nose=", 2 * neck_spigot_radius,
+         "/", 2 * socket_radius, " mm. Tape retention still required."));
 echo(str("Hollow TPU nose: ", nose_wall,
          " mm shell at 100% infill; remove internal dome support before assembly."));
 echo("WARNING: thicker nose raises top mass; bottle-side balance must be measured, not assumed.");
