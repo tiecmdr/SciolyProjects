@@ -22,7 +22,7 @@
 //
 // With print_orientation=true, print the lower tube base-down and the upper
 // tube nose-collar-down. Print the middle female-socket-down. Heights are
-// 311.4 mm lower, 320 mm middle, and 291.4 mm upper,
+// 306.4 mm lower, 320 mm middle, and 286.4 mm upper,
 // including the male spigots; all three fit a 325 mm
 // printer height limit.
 // Use approximately
@@ -111,7 +111,7 @@ flange_radial_steps = 20;
 
 /* [TPU socket] */
 neck_diameter = 18;
-socket_overlap = 25; // Long elastic grip; verify shell deformation clearance physically.
+socket_overlap = 15; // Elastic grip; verify shell deformation clearance physically.
 socket_radial_clearance = 0.05; // 18.10 mm hole; 0.30 mm interference on the 18.40 mm neck.
 socket_wall = 2.4;
 socket_stop_height = 1.2;
