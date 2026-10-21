@@ -159,7 +159,9 @@ is not self-supporting. Support top/bottom Z separation is increased from
 TPU-to-TPU bonding. These are trial separation settings: they may leave a
 rougher inner dome, and do not guarantee easy support removal.
 Remove all support through the **16.90 mm stop opening** before fitting
-the nose. If support cannot be removed without damaging the shell, do
+the nose. The longer 25 mm collar makes that access deeper; inspect tree
+branches for removability rather than assuming the former setup still works.
+If support cannot be removed without damaging the shell, do
 not force assembly; a split nose or a self-supporting inner roof would
 require another geometry revision.
 
