@@ -1,33 +1,29 @@
 # H2C printing and fit checks
 
-The original material reference uses **Bambu ASA Aero** for the three
-tubes, flange, fins, and rigid fit coupons, and **Bambu TPU 95A** for the
-nose and its socket coupon. The customized project is described below.
-ASA Aero is a
-foaming material, not ABS or ordinary ASA. The TPU profile is for regular
+The current projects use **Generic ABS** for the three tubes, flange,
+fins, and rigid fit coupons, and **Bambu TPU 95A** for the nose and its
+socket coupon. ABS replaces the failed ASA Aero printing trial; do not
+use the former foaming material's 0.52 flow ratio. The TPU profile is for regular
 95A, not 95A HF or TPU for AMS.
 
 ## Project setup
 
 **Current customized body/nose project:** the main tube walls remain
 **1.6 mm**, with the thicker base and joint reinforcement unchanged.
-All three types of male connector are **0.4 mm larger in diameter**;
-the mating holes, insertion depths, and assembled lengths are unchanged.
-This leaves **0.10 mm nominal diametral clearance** at each connection.
-The affected production meshes and male fit coupons have been replaced.
+All three types of male connector retain their previous **0.4 mm diameter
+enlargement**. Rigid mating holes, insertion depths, and assembled lengths
+are unchanged, retaining **0.10 mm diametral clearance** at rigid connections.
+The TPU nose now has a **1.2 mm spherical shell** and an **18.10 mm socket**,
+0.4 mm smaller than before. Its 18.40 mm ABS neck gives **0.30 mm nominal
+diametral interference**. The mounting collar retains its 2.4 mm wall.
+Both affected STL meshes and all embedded nose copies/socket coupons are updated.
 
-The three tubes, flange, and rigid fit coupons now use **Bambu ASA Aero**
-in slot 1, replacing the Generic ABS profile and the tubes' TPU assignments.
-Slot 1 uses the ASA Aero settings from the separate fin project, including
-270 C nozzle temperature, 90 C textured bed, and 0.52 flow ratio.
-Noses and the nose socket coupon remain **Bambu TPU 95A** in slot 2.
-Existing fin copies in the body/nose project retain their TPU assignments;
-they have not been converted to ASA Aero.
-Other object settings and copies are preserved. The one nose formerly
-sharing the tube plate has been moved to the previously empty plate 5,
-so ASA Aero and TPU remain separate print jobs. The other objects retain
-their positions. Plate titles now describe the current contents.
-The separate `PingPongParachute-Fins.3mf` remains unchanged in ASA Aero.
+Both 3MF projects now use the installed **Generic ABS H2C 0.4 mm factory
+profile** in slot 1. TPU settings remain unchanged in slot 2. Existing
+fin copies in the body/nose project also use ABS; their geometry is unchanged.
+The TPU noses previously sharing plate 1 with fins have moved to empty
+plate 2, preserving their relative layout, so ABS and TPU remain separate jobs.
+The separate fin project retains its geometry and solid-root modifiers.
 
 `PingPongParachute.3mf` targets the H2C with 0.4 mm nozzles and 0.20 mm
 layers. Each plate uses only the **right hotend**, including the 320 mm
@@ -38,38 +34,38 @@ with light wing infill and solid mounting reinforcement.
 
 | Filament slot | Material | Nozzle | Textured PEI bed | Chamber | Flow ratio | Max volumetric speed |
 |---|---|---|---|---|---|---|
-| 1 | Bambu ASA-Aero, H2C 0.4 mm factory profile | 270 C | 90 C | 60 C | 0.52 | 12 mm3/s |
+| 1 | Generic ABS, H2C 0.4 mm factory profile | 260 C first layer / 270 C subsequent | 90 C | 60 C | 0.98 | 15 mm3/s |
 | 2 | Bambu TPU 95A, H2C 0.4 mm factory profile | 230 C | 35 C | Off | 1.00 | 3.6 mm3/s |
 
 Both slots map to the right hotend, on **separate print jobs**. Load the
 appropriate material for each job. Feed regular TPU 95A from the external
 spool, **not the AMS**. Let the chamber cool before a TPU job. Dry both
 filaments according to their spool/manufacturer instructions. Use
-appropriate ventilation for ASA printing and a TPU-compatible release
+appropriate ventilation for ABS printing and a TPU-compatible release
 layer on the plate.
 
 The body/nose project uses Arachne, four wall loops, an 8 mm outer brim, reduced
 wall speeds (35 mm/s outer, 50 mm/s inner), and reduced acceleration for
 the tall, narrow tubes. These are conservative starting settings, not a
-substitute for checking actual foaming and layer bonding.
+substitute for checking actual extrusion, shrinkage, and layer bonding.
 
 | Plate | Contents | Notes |
 |---|---|---|
-| 1 | Existing TPU noses and TPU fin copies | Nose shells remain 1.6 mm; existing layouts and settings retained |
-| 2 | Empty middle-tube placeholder | No objects |
+| 1 | Existing fin copies, now ABS | Geometry and positions retained |
+| 2 | TPU nose copies moved from plate 1 | Hollow 1.2 mm shells; TPU support settings retained |
 | 3 | Empty upper-tube placeholder | No objects |
-| 4 | ASA Aero lower, middle, upper tubes and flange | Tube heights 301.9, 320, and 281.9 mm; flange supports retained |
-| 5 | TPU nose moved off the ASA plate | Hollow 1.6 mm shell, internal tree support, 5 mm brim |
-| 6 | ASA Aero fit coupons | Base socket, male/female tube joint, and nose neck |
+| 4 | ABS lower, middle, upper tubes and flange | Tube heights 301.9, 320, and 281.9 mm; flange supports retained |
+| 5 | TPU nose | Hollow 1.2 mm shell, internal tree support, 5 mm brim |
+| 6 | ABS fit coupons | Base socket, male/female tube joint, and nose neck |
 | 7 | TPU nose socket coupon | Includes the actual socket stop; no dome or support needed |
 
-`PingPongParachute-Fins.3mf` has three separate ASA Aero plates:
+`PingPongParachute-Fins.3mf` has three separate ABS plates:
 
 | Plate | Contents | Notes |
 |---|---|---|
-| 1 | Two enlarged ASA Aero swept fins | 5% gyroid wing infill; solid root and tape tabs |
-| 2 | Third enlarged ASA Aero swept fin | Same settings as plate 1 |
-| 3 | ASA Aero fin mounting test | Solid; print before the fins |
+| 1 | Two enlarged ABS swept fins | 5% gyroid wing infill; solid root and tape tabs |
+| 2 | Third enlarged ABS swept fin | Same settings as plate 1 |
+| 3 | ABS fin mounting test | Solid; print before the fins |
 
 ## Print the fit checks first
 
@@ -83,20 +79,22 @@ the production parts. Remove brims and support remnants before measuring.
 |---|---|---|---|---|
 | Lower/middle and middle/upper tube joints | 11.50 mm | 11.60 mm | 0.10 mm | 20 mm |
 | Flange spigot / lower tube | 17.50 mm | 17.60 mm | 0.10 mm | 6 mm |
-| Upper tube neck / TPU nose | 18.40 mm | 18.50 mm | 0.10 mm | 6 mm |
+| Upper tube neck / TPU nose | 18.40 mm | 18.10 mm | -0.30 mm (interference) | 6 mm |
 
 These are nominal CAD dimensions, not measured printed fits. The male-only
 enlargement reduces the previous 0.50 mm diametral gaps to 0.10 mm after
-the earlier connections were reported loose. This tighter trial fit is
-not yet validated in ASA Aero; foaming and actual shrinkage can change the result.
+the earlier connections were reported loose. The rigid fits and elastic nose fit are
+not yet validated in ABS/TPU; actual shrinkage can change the result.
 Keep factory shrink compensation and XY compensation unchanged until the
 coupons establish a need; do not guess a scale factor for individual parts.
 
 The two rigid joint coupons must slide fully together until the rims meet.
 The base coupon must seat on the flange panel. The nose neck coupon must
 reach the TPU stop without forcing or splitting the collar. Its shoulder
-must not prevent seating. All three are clearance fits and **require
-external tape for retention**; the nose stop is not a latch.
+must not prevent seating. The rigid connections remain clearance fits;
+the nose is a trial elastic interference fit. **External tape is still
+required for retention**; the nose stop is not a latch. Test the socket
+coupon before the full nose. Do not force an overly tight TPU collar.
 
 If all fits are too tight, reduce `male_diameter_increase` in
 `PingPongParachute-Cylinder.scad`, re-export all affected production parts
@@ -105,11 +103,12 @@ The increase is a **total diameter** change. The three radial-clearance
 parameters describe the original **per-side** gaps before that enlargement:
 effective diametral gap = `2 * radial_clearance - male_diameter_increase`.
 The joint and flange clearance parameters affect only their male spigots;
-`socket_radial_clearance` changes the female nose hole, so leave it unchanged
-when preserving that hole. Do not change only the test mesh.
+`socket_radial_clearance` changes only the female nose hole; its new 0.05 mm
+value produces the 18.10 mm socket. Adjust it independently for nose fit
+without changing any ABS connector. Do not change only the test mesh.
 
-For the ASA Aero return, retain the **1.6 mm main tube walls** rather than
-reducing them to 1.2 mm. The thinner option saves weight but reduces bending
+For the ABS trial, retain the **1.6 mm main tube walls** while evaluating
+thinner options separately. Thinning saves weight but reduces bending
 and local-buckling resistance. Neither thickness is flight-qualified; added
 stiffness does not establish launch or impact strength.
 
@@ -130,10 +129,11 @@ The 34 mm flange now leaves a **5.4 mm radial tape ledge** around the base.
 Use the regenerated fit coupons, not the older thin-wall prints.
 
 The TPU nose remains a **hollow 40 mm ball**, trimmed to 36 mm print height.
-Its spherical wall is now **1.6 mm**, half the previous 3.2 mm shell, to
+Its spherical wall is now **1.2 mm**, reduced from 1.6 mm, to
 reduce rigidity while retaining the hollow center. **100% infill applies
 to that shell and its mounting collar, not to the hollow center.** The
-18.50 mm mounting socket and seating stop remain unchanged. Local socket
+18.10 mm mounting socket has 0.30 mm interference; the seating stop height
+and insertion depth remain unchanged. Local socket
 transitions do not have uniform spherical-wall thickness.
 
 The nose retains internal tree support because its inner spherical dome
@@ -141,20 +141,25 @@ is not self-supporting. Support top/bottom Z separation is increased from
 0.3 to **0.4 mm**, and dense top interface layers are disabled to reduce
 TPU-to-TPU bonding. These are trial separation settings: they may leave a
 rougher inner dome, and do not guarantee easy support removal.
-Remove all support through the **17.30 mm stop opening** before fitting
+Remove all support through the **16.90 mm stop opening** before fitting
 the nose. If support cannot be removed without damaging the shell, do
 not force assembly; a split nose or a self-supporting inner roof would
 require another geometry revision.
 
-These changes add material, not a strength certification. ASA Aero remains
-a foamed material. Check the actual spool is **Bambu ASA Aero**, not ABS;
-the retained 270 C / 0.52 flow profile is specific to ASA Aero. Dry the
+These changes are not a strength or rebound certification. A thinner TPU
+shell may dent, buckle, tear, or remain inverted after impact. Evaluate
+the 1.2 mm shell before trying 1.0 mm or less. Use ABS with the ABS profile,
+not the former ASA Aero 0.52 flow profile. Dry the
 filament and check a short coupon for continuous extrusion and layer
 bonding before spending material on another 320 mm tube. Added thickness
 cannot compensate for wet filament, incorrect material settings, poor
 bonding, or bad bed adhesion. Do not change flow or scale by guesswork.
 
 ## Center of mass: check the dry assembled rocket
+
+**Historical reference only:** all mass and balance estimates in this section
+predate the ABS switch, 1.2 mm nose, and tighter socket. They are not current
+ABS/TPU estimates. Re-slice and weigh the new parts before assessing balance.
 
 The 1.6 mm hollow nose is estimated at **9.6 g** using the retained
 TPU 95A profile's density, compared with 16.2 g for the previous 3.2 mm
@@ -237,18 +242,18 @@ center of pressure and parachute deployment still require evaluation.
 
 The body/nose geometry revision invalidates its affected plate caches.
 **Re-slice occupied plates in Bambu Studio before printing.** Affected
-cached previews/toolpaths have been removed. Plates 2 and 3 remain empty;
-plate 5 now holds the TPU nose removed from the ASA tube plate.
-The separate fin project's saved slicing is unchanged.
+cached previews/toolpaths have been removed from both projects.
+Plate 2 now holds TPU nose copies; plate 3 remains empty.
+The separate fin project also requires fresh ABS slicing.
 Inspect the full layer preview before sending a job, and re-slice after
 any settings, mesh, or nozzle changes. Check continuous
-1.6 mm spherical nose walls and 1.6 mm main tube skins, connected joint roots,
+1.2 mm spherical nose walls and 1.6 mm main tube skins, connected joint roots,
 open bores, correct material and right-hotend mapping, bed adhesion, and a maximum height below
 the selected hotend's limit. Successful slicing does not verify physical
 fit, bed adhesion, strength, or support removability.
 
 The hollow spherical nose needs dome support. Ensure the generated tree
-support can be removed through the socket's **17.30 mm stop opening**.
+support can be removed through the socket's **16.90 mm stop opening**.
 Same-material TPU support may be difficult to remove; do not print the
 full nose if preview shows inaccessible branches or fused contact regions.
 The socket coupon verifies fit, not dome printability or support removal.
@@ -307,7 +312,7 @@ alignment, and equal 120-degree spacing remain important. The larger tabs
 still have thin 0.8 mm walls; more attachment area does not establish
 impact strength. Verify them with the mounting test.
 The 3 mm cardboard used on a hand-built rocket is a dimensional reference,
-not evidence that these 2 mm foamed-ASA fins have equivalent stiffness.
+not evidence that these 2 mm ABS fins have equivalent stiffness.
 The curved outline removes abrupt changes in edge direction, but it is
 not proof of lower drag than a straight triangular fin. The wing has no
 axial thickness taper, and its tape tabs remain one-sided. Whole-rocket center
@@ -356,15 +361,15 @@ layers at 0.20 mm layer height. A **100% infill modifier with three wall
 loops** reinforces the full **10.7 mm-wide bottle-facing root band** and both
 tape tabs. The mounting-test coupon is entirely solid. The 2 mm wing
 still needs solid skins, so 5% infill does not mean 95% less fin weight.
-All three fin-project plates use only ASA Aero slot 1; the retained TPU
+All three fin-project plates use only ABS slot 1; the retained TPU
 slot is unused. The enlarged fins are split across two production plates
 to leave room for their brims rather than squeezing three into one row.
-Bambu Studio estimates **12.42 g** for the two-fin plate, **6.22 g** for
+Historical ASA Aero slicing estimated **12.42 g** for the two-fin plate, **6.22 g** for
 the third-fin plate, and **2.21 g** for the mounting-test plate, including
-brims. These are slicer estimates, not measured foamed-part weights.
+brims. These are not current ABS weights; re-slice for new estimates.
 Repeat the dry assembled balance check with these enlarged fins; the
 extension-only mass table above does not include them.
-The thin foamed-ASA attachment tabs can bend or break; no flight-load or
+The thin ABS attachment tabs can bend or break; no flight-load or
 tape-retention rating is established. The photo and these dimensions do not establish
 aerodynamic stability. Check event rules, launcher clearance, tape adhesion,
 fin rigidity, and controlled-flight behavior before use. Never drill, heat,

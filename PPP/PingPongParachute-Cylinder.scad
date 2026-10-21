@@ -1,6 +1,6 @@
 // Reinforced bottle-bottom nose extension. Dimensions are in millimeters.
-// Export lower_body, middle_body, upper_body, and flange in Bambu ASA Aero;
-// nose in TPU 95A. Use the ASA Aero profile, NOT ABS or ordinary ASA.
+// Export lower_body, middle_body, upper_body, and flange in ABS;
+// nose in TPU 95A. Use an ABS profile, not the former foaming ASA Aero profile.
 // Never print the full assembly as one piece.
 // Assembly is for viewing. part="fit_test" is a short tube/socket coupon;
 // print it with the flange to check both socket fit and bottle seating.
@@ -8,8 +8,8 @@
 // The middle adds exactly 300 mm; its 20 mm spigot makes print height 320 mm.
 // With an assumed 68 mm bottle: 34 mm flange, 23.2 mm base, 12 mm waist.
 // The flange has a flat tape-facing top and a contoured bottle-facing underside.
-// Mass depends on ASA Aero foaming, flow, temperature, and sliced walls.
-// Use the calibrated slicer estimate; solid ABS density is not applicable.
+// Mass depends on material density, calibrated flow, and sliced walls.
+// Re-slice in ABS; the former ASA Aero mass estimates are not applicable.
 // Estimates exclude tape/supports/bottle/payload.
 // The broad tape flange is separate to avoid a tall supported overhang.
 //
@@ -26,8 +26,8 @@
 // including the male spigots; all three fit a 325 mm
 // printer height limit.
 // Use approximately
-// 0.2 mm layers, a brim, and the enclosed H2C ASA Aero profile (270 C,
-// 0.52 flow ratio). Inspect continuous walls; use perimeter printing, not vase
+// 0.2 mm layers, a brim, and the enclosed H2C Generic ABS profile.
+// Inspect continuous walls; use perimeter printing, not vase
 // mode. TPU: print flat opening down at 100% infill within the thick shell.
 // The center remains hollow; internal dome support still needs removal.
 // Print the flange bottle-contact side down with local support beneath its
@@ -43,22 +43,22 @@
 // meet, then retain with external tape. None is a latch.
 // Without the middle, connect the SAME lower and upper parts directly.
 // Print joint_lower_test and joint_upper_test to check this fit beforehand.
-// Print nose_neck_test in ASA Aero and nose_socket_test in TPU 95A to check
-// the nose clearance and stop without printing the full upper body.
+// Print nose_neck_test in ABS and nose_socket_test in TPU 95A to check
+// the elastic nose fit and stop without printing the full upper body.
 // The longer, narrow tube is more flexible; geometry alone does not establish
 // launch/impact strength or rule compliance. Test before flight.
 // PROTOTYPE ONLY: not qualified for repeated launches or 20 m drops.
-// The 900 mm length, foamed ASA walls, layer bonding, and tape-retained joints
+// The 900 mm length, thin walls, layer bonding, and tape-retained joints
 // can fail under bending or impact. A TPU nose is not a validated crash absorber.
 // Tape does not have a calculated safety rating here; do not
 // sand, heat, cut, glue, or otherwise damage the pressurized bottle.
-// The nose socket is a clearance/slip fit, NOT a locking or interference fit.
-// Retain the TPU nose with external tape across the ASA/TPU joint and verify
+// The nose socket is a trial interference fit, NOT a locking connection.
+// Retain the TPU nose with external tape across the ABS/TPU joint and verify
 // adhesion on both materials; the stop controls depth, not pull-off retention.
-// "3M tape" does not specify adhesion, peel strength, or ASA/TPU compatibility.
+// "3M tape" does not specify adhesion, peel strength, or ABS/TPU compatibility.
 // Neither a safe tape load nor 20 m impact survival is established by this CAD.
 // Fit-test, verify nose retention, and test progressively in a controlled area.
-// The 1.6 mm TPU shell is not a validated shock absorber.
+// The 1.2 mm TPU shell is not a validated shock absorber.
 // Bottle/payload masses and locations are needed to determine assembled balance.
 // A low center of mass does NOT guarantee upright descent or stable launch.
 // Aerodynamic balance, parachute behavior and orientation require flight testing.
@@ -73,7 +73,7 @@ assembled_height = 900; // Full assembly, including the TPU nose.
 middle_length = 300; // Added assembled length; excludes the male spigot.
 ball_diameter = 40;
 body_wall = 1.6;
-nose_wall = 1.6; // More flexible than the previous 3.2 mm shell; center stays hollow.
+nose_wall = 1.2; // Trial flexible shell; keep the mounting collar reinforced.
 waist_diameter = 12;
 
 /* [Connector fit] */
@@ -112,7 +112,7 @@ flange_radial_steps = 20;
 /* [TPU socket] */
 neck_diameter = 18;
 socket_overlap = 6;
-socket_radial_clearance = 0.25; // PER SIDE before male enlargement; fixes the nose hole.
+socket_radial_clearance = 0.05; // 18.10 mm hole; 0.30 mm interference on the 18.40 mm neck.
 socket_wall = 2.4;
 socket_stop_height = 1.2;
 nose_bottom_trim = 4; // Remove the lowest 4 mm of the 40 mm sphere.
@@ -154,9 +154,8 @@ assert(angular_segments >= 40 && body_steps >= 40, "Mesh quality is too low.");
 assert(body_wall > 0 && nose_wall > 0 && nose_wall < ball_radius);
 assert(male_diameter_increase >= 0 &&
        male_diameter_increase / 2 < min(joint_radial_clearance,
-                                      flange_radial_clearance,
-                                      socket_radial_clearance),
-       "Male enlargement must leave positive clearance at all three sockets.");
+                                      flange_radial_clearance),
+       "Male enlargement must leave positive clearance at the rigid sockets.");
 assert(base_wall >= body_wall && base_radius > base_wall);
 assert(base_radius > neck_radius && waist_diameter / 2 > body_wall);
 assert(seat_feet >= 3 && floor(seat_feet) == seat_feet);
@@ -183,7 +182,7 @@ assert(socket_outer_radius <
        "Socket must fit inside the trimmed sphere's bottom rim.");
 assert(socket_radius - 0.6 > 0 &&
        socket_radius - 0.6 < neck_spigot_radius,
-       "Socket stop must overlap the ASA collar.");
+       "Socket stop must overlap the ABS collar.");
 assert(joint_overlap > 0 && joint_wall > 0 && joint_root_height > 0 &&
        joint_radial_clearance >= 0 && joint_test_margin > joint_root_height);
 assert(joint_diameter > waist_diameter && joint_socket_wall >= body_wall);
@@ -465,7 +464,7 @@ module nose_shell() {
             translate([0, 0, -eps])
                 cylinder(r = socket_radius, h = socket_overlap + eps);
         }
-        // Slip-fit collar locates the spigot; its stop fixes assembled height.
+        // Elastic interference collar grips the spigot; the stop sets depth.
         difference() {
             cylinder(r = socket_outer_radius,
                      h = socket_overlap + socket_stop_height);
@@ -542,5 +541,5 @@ echo(str("Connector male ODs / female IDs: joint=", 2 * joint_spigot_radius,
          "/", 2 * socket_radius, " mm. Tape retention still required."));
 echo(str("Hollow TPU nose: ", nose_wall,
          " mm shell at 100% infill; remove internal dome support before assembly."));
-echo("WARNING: thicker nose raises top mass; bottle-side balance must be measured, not assumed.");
+echo("WARNING: bottle-side balance and TPU impact recovery must be measured, not assumed.");
 echo("WARNING: approximate bottle seat; verify fit, rules, tape and impact behavior.");

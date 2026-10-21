@@ -1,6 +1,6 @@
 // Three identical, tape-mounted fins for the nominal 68 mm bottle barrel.
 // Dimensions are millimeters. The mouth/nozzle plane is assembly z=0;
-// positive z points toward the bottle base. Print three fins in ASA Aero.
+// positive z points toward the bottle base. Print three fins in ABS.
 // The default cylindrical contour is NOT a measured Coca-Cola bottle profile.
 // Check fit_test first; replace bottle_profile with measured diameters if needed.
 // Never alter the pressurized bottle to make the fin fit.
