@@ -22,7 +22,7 @@
 //
 // With print_orientation=true, print the lower tube base-down and the upper
 // tube nose-collar-down. Print the middle female-socket-down. Heights are
-// 301.9 mm lower, 320 mm middle, and 281.9 mm upper,
+// 302.9 mm lower, 320 mm middle, and 282.9 mm upper,
 // including the male spigots; all three fit a 325 mm
 // printer height limit.
 // Use approximately
@@ -93,25 +93,25 @@ printer_max_height = 325;
 bottle_diameter = 68; // Assumed Coca-Cola 1 L outside diameter, not verified.
 base_diameter_fraction = 23.2 / 68; // Preserve the 17.6 mm base bore with 2.8 mm walls.
 base_wall = 2.8;
-base_skirt_height = 22;
+base_skirt_height = 32; // Straight 17.6 mm bore clears the longer flange spigot.
 seat_feet = 5;
 seat_dome_height = 5; // Height of central recess above the lowest feet.
 seat_lobe_height = 3; // Additional valley height between the feet.
 seat_rotation = 0; // Rotate the five-lobe pattern to align with your bottle.
 seat_clearance = 0; // Vertical clearance; tape bridges any remaining gap.
-fit_test_height = 16;
+fit_test_height = 30; // Includes the full 20 mm flange engagement plus clearance.
 
 /* [Horizontal tape flange] */
 flange_diameter_fraction = 0.5; // Half bottle width; 5.4 mm tape ledge around the tube.
 flange_thickness = 1.2; // Minimum stock above the highest bottle-seat contour.
-flange_collar_height = 6;
+flange_collar_height = 20; // Match the interchangeable tube spigot engagement.
 flange_collar_wall = 2.8;
 flange_radial_clearance = 0.25; // PER SIDE before male enlargement.
 flange_radial_steps = 20;
 
 /* [TPU socket] */
 neck_diameter = 18;
-socket_overlap = 6;
+socket_overlap = 8; // Longer elastic grip, with space above for shell deformation.
 socket_radial_clearance = 0.05; // 18.10 mm hole; 0.30 mm interference on the 18.40 mm neck.
 socket_wall = 2.4;
 socket_stop_height = 1.2;
@@ -169,9 +169,17 @@ assert(flange_bore_radius > 0 && flange_spigot_radius < base_radius - base_wall)
 assert(flange_radial_steps >= 4 && floor(flange_radial_steps) == flange_radial_steps);
 assert(flange_height < fit_test_height);
 assert(base_skirt_height > seat_end && fit_test_height > seat_end);
+assert(base_skirt_height >= flange_height + joint_root_height,
+       "Keep the base bore straight beyond the full flange spigot.");
 assert(fit_test_height <= base_skirt_height);
 assert(nose_bottom_trim > 0 && nose_bottom_trim < ball_radius);
 assert(socket_overlap > 0 && socket_overlap + socket_stop_height < nose_height);
+assert(socket_overlap + socket_stop_height < ball_radius - nose_bottom_trim &&
+       sqrt(pow(ball_radius - nose_wall, 2) -
+            pow(socket_overlap + socket_stop_height -
+                (ball_radius - nose_bottom_trim), 2)) >
+       max(socket_outer_radius, neck_spigot_radius) + 2,
+       "Keep the nose collar below the equator and clear of the inner shell.");
 assert(socket_radial_clearance >= 0 && socket_wall > 0);
 assert(neck_spigot_radius - body_wall > 0.5);
 assert(body_height > base_skirt_height + 100 && body_height <= assembled_height);
@@ -218,6 +226,9 @@ profile = [
     [body_height - socket_overlap, neck_spigot_radius],
     [body_height, neck_spigot_radius]
 ];
+for (i = [1 : len(profile) - 1])
+    assert(profile[i][0] > profile[i - 1][0],
+           "Body profile stations must stay strictly increasing.");
 assert(body_height * 0.37 < split_height - joint_root_height &&
        split_height + joint_overlap + joint_root_height < body_height * 0.64,
        "Compact tube length leaves insufficient room for the standard joint.");
@@ -539,6 +550,10 @@ echo(str("Connector male ODs / female IDs: joint=", 2 * joint_spigot_radius,
          "/", 2 * joint_socket_radius, " mm; flange=", 2 * flange_spigot_radius,
          "/", 2 * (base_radius - base_wall), " mm; nose=", 2 * neck_spigot_radius,
          "/", 2 * socket_radius, " mm. Tape retention still required."));
+echo(str("Engagement lengths: flange=", flange_collar_height,
+         " mm; nose=", socket_overlap,
+         " mm; nose tip to inner crown=",
+         nose_height - nose_wall - socket_overlap, " mm."));
 echo(str("Hollow TPU nose: ", nose_wall,
          " mm shell at 100% infill; remove internal dome support before assembly."));
 echo("WARNING: bottle-side balance and TPU impact recovery must be measured, not assumed.");
