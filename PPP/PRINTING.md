@@ -19,11 +19,12 @@ flange's bottle-side datum**, clearing the full spigot before tapering;
 the matching base fit coupon is now 23.8 mm tall (20 mm engagement plus margin).
 The TPU nose now has a **1.2 mm spherical shell** and an **18.10 mm socket**,
 0.4 mm smaller than before. Its 18.40 mm ABS neck gives **0.30 mm nominal
-diametral interference**. Nose engagement increases from 6 to **8 mm**,
-not 12 mm, to leave more room for impact deformation. The matching TPU
+diametral interference**. Nose engagement is now **25 mm**. The matching TPU
 collar is lengthened with its stop, retaining a 2.4 mm wall and 1.2 mm
-stop height. The stationary neck tip is **26.8 mm below the inner crown**
-along the axis; this does not guarantee clearance during impact.
+stop height. The stationary neck tip is **9.8 mm below the inner crown**
+along the axis, with about **4.3 mm radial clearance** between the collar's
+upper rim and the inner shell. These undeformed CAD clearances do not
+guarantee clearance during impact; the longer collar also stiffens the nose.
 All affected STL meshes and embedded production copies/fit coupons are updated.
 
 Both 3MF projects now use the installed **Generic ABS H2C 0.4 mm factory
@@ -62,10 +63,10 @@ substitute for checking actual extrusion, shrinkage, and layer bonding.
 | 1 | Existing fin copies, now ABS | Geometry and positions retained |
 | 2 | TPU nose copies moved from plate 1 | Hollow 1.2 mm shells; TPU support settings retained |
 | 3 | Empty upper-tube placeholder | No objects |
-| 4 | ABS lower, middle, upper tubes and flange | Tube heights 302.9, 320, and 282.9 mm; 20 mm flange spigot; flange supports retained |
+| 4 | ABS lower, middle, upper tubes and flange | Tube heights 311.4, 320, and 291.4 mm; 20 mm flange spigot; flange supports retained |
 | 5 | TPU nose | Hollow 1.2 mm shell, internal tree support, 5 mm brim |
 | 6 | ABS fit coupons | Base socket, male/female tube joint, and nose neck |
-| 7 | TPU nose socket coupon | Full 8 mm engagement and stop; 9.2 mm tall; no dome or support needed |
+| 7 | TPU nose socket coupon | Full 25 mm engagement and stop; 26.2 mm tall; no full dome; inspect support preview |
 
 `PingPongParachute-Fins.3mf` has three separate ABS plates:
 
@@ -87,7 +88,7 @@ the production parts. Remove brims and support remnants before measuring.
 |---|---|---|---|---|
 | Lower/middle and middle/upper tube joints | 11.50 mm | 11.60 mm | 0.10 mm | 20 mm |
 | Flange spigot / lower tube | 17.50 mm | 17.60 mm | 0.10 mm | 20 mm |
-| Upper tube neck / TPU nose | 18.40 mm | 18.10 mm | -0.30 mm (interference) | 8 mm |
+| Upper tube neck / TPU nose | 18.40 mm | 18.10 mm | -0.30 mm (interference) | 25 mm |
 
 These are nominal CAD dimensions, not measured printed fits. The male-only
 enlargement reduces the previous 0.50 mm diametral gaps to 0.10 mm after
@@ -134,9 +135,12 @@ female diameters rather than weakening the male spigots by shrinking
 their outside diameter. The subsequent male-only fit revision reduces
 the original 0.50 mm diametral gaps to the 0.10 mm values above.
 Tube-joint engagement remains 20 mm and assembled lengths remain 900/600 mm.
-The flange engagement is extended to 20 mm and nose engagement to 8 mm;
-the lower and upper tube print heights each increase by 1 mm to preserve
-the assembled lengths. The middle tube remains 320 mm tall.
+The flange engagement remains 20 mm and nose engagement is extended to 25 mm.
+The lower and upper tube print heights each increase by 8.5 mm relative
+to the 8 mm nose-engagement revision to preserve assembled lengths.
+The middle tube remains 320 mm tall. The upper shoulder transitions are
+anchored to the neck base rather than its tip to preserve their shape
+when the neck grows.
 The 34 mm flange now leaves a **5.4 mm radial tape ledge** around the base.
 Use the regenerated fit coupons, not the older thin-wall prints.
 
@@ -144,7 +148,7 @@ The TPU nose remains a **hollow 40 mm ball**, trimmed to 36 mm print height.
 Its spherical wall is now **1.2 mm**, reduced from 1.6 mm, to
 reduce rigidity while retaining the hollow center. **100% infill applies
 to that shell and its mounting collar, not to the hollow center.** The
-18.10 mm mounting socket has 0.30 mm interference over 8 mm engagement;
+18.10 mm mounting socket has 0.30 mm interference over 25 mm engagement;
 the seating stop height remains 1.2 mm, but its position moves to match
 the longer neck. Local socket
 transitions do not have uniform spherical-wall thickness.
@@ -204,7 +208,7 @@ the bottle mouth. Positive positions point along the pipes toward the
 nose; most bottle-side components have negative positions. The end of
 the lower tube's main body is **288.1 mm** above this plane, excluding
 its male joint's insertion length in that historical reference. The current
-lower tube's main-body rim is **289.1 mm** above the mounting plane.
+lower tube's main-body rim is **297.6 mm** above the mounting plane.
 
 For illustration only, assume the combined bottle-side assembly has its
 center **110 mm below the flange** (the midpoint of the unmeasured

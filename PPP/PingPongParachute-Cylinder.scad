@@ -22,7 +22,7 @@
 //
 // With print_orientation=true, print the lower tube base-down and the upper
 // tube nose-collar-down. Print the middle female-socket-down. Heights are
-// 302.9 mm lower, 320 mm middle, and 282.9 mm upper,
+// 311.4 mm lower, 320 mm middle, and 291.4 mm upper,
 // including the male spigots; all three fit a 325 mm
 // printer height limit.
 // Use approximately
@@ -111,7 +111,7 @@ flange_radial_steps = 20;
 
 /* [TPU socket] */
 neck_diameter = 18;
-socket_overlap = 8; // Longer elastic grip, with space above for shell deformation.
+socket_overlap = 25; // Long elastic grip; verify shell deformation clearance physically.
 socket_radial_clearance = 0.05; // 18.10 mm hole; 0.30 mm interference on the 18.40 mm neck.
 socket_wall = 2.4;
 socket_stop_height = 1.2;
@@ -174,12 +174,13 @@ assert(base_skirt_height >= flange_height + joint_root_height,
 assert(fit_test_height <= base_skirt_height);
 assert(nose_bottom_trim > 0 && nose_bottom_trim < ball_radius);
 assert(socket_overlap > 0 && socket_overlap + socket_stop_height < nose_height);
-assert(socket_overlap + socket_stop_height < ball_radius - nose_bottom_trim &&
-       sqrt(pow(ball_radius - nose_wall, 2) -
+assert(socket_overlap + socket_stop_height < nose_height - nose_wall,
+       "Keep the nose collar below the inner crown.");
+assert(sqrt(pow(ball_radius - nose_wall, 2) -
             pow(socket_overlap + socket_stop_height -
                 (ball_radius - nose_bottom_trim), 2)) >
        max(socket_outer_radius, neck_spigot_radius) + 2,
-       "Keep the nose collar below the equator and clear of the inner shell.");
+       "Keep at least 2 mm radial clearance between the collar rim and inner shell.");
 assert(socket_radial_clearance >= 0 && socket_wall > 0);
 assert(neck_spigot_radius - body_wall > 0.5);
 assert(body_height > base_skirt_height + 100 && body_height <= assembled_height);
@@ -220,8 +221,8 @@ profile = [
     [split_height + joint_overlap, joint_outer_radius],
     [split_height + joint_overlap + joint_root_height, joint_outer_radius],
     [body_height * 0.64, waist_diameter / 2],
-    [body_height - 40, waist_diameter / 2 + 0.5],
-    [body_height - 16, 12],
+    [body_height - socket_overlap - 32, waist_diameter / 2 + 0.5],
+    [body_height - socket_overlap - 8, 12],
     [body_height - socket_overlap - 2, 11],
     [body_height - socket_overlap, neck_spigot_radius],
     [body_height, neck_spigot_radius]
