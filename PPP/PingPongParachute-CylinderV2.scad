@@ -1,6 +1,7 @@
 // V2: wider tape flange and a single-piece TPU for AMS upper tube/rounded nose.
 // Dimensions are millimeters. V1 stays unchanged; its lower/middle tubes
 // and 20 mm clearance-fit connectors are reused at their original size.
+// Four shallow identity labels are debossed into the lower tube only.
 // The entire five-lobed bottle-seat contour spans the 50 mm flange.
 // Export individual parts, never the assembly. See PRINTING.md for V2.
 // H2C project: PPP-Cylinder-V2.3mf; tubes are horizontal, not upright.
@@ -18,9 +19,17 @@ bed_angle = 45; // Long tube axes lie diagonally in the XY plane, not upright.
 
 /* [V2 shape] */
 flange_diameter = 50; // Entire wavy seat/panel; tube base remains 23.2 mm.
-ball_diameter = 40;
+head_diameter = 30; // Smaller prototype; verify against the actual event-test cap.
 blend_start = 520; // Compact-assembly datum; below the old nose joint.
 sphere_join_angle = -20; // Lower hemisphere; tangent matched to the tube blend.
+
+/* [Surface markings] */
+lower_labels = ["Odle Middle School", "Siddhu", "Team Feynman", "Allen"];
+label_font = "Liberation Sans:style=Bold";
+label_size = 5;
+label_depth = 0.35;
+label_start = 48; // Above the flange engagement, far below the tube joint.
+label_length = 75; // Available axial length, not a text scaling factor.
 
 /* [Mesh quality] */
 angular_segments = 120;
@@ -41,7 +50,7 @@ v2_flange_bore_radius = 5.95;
 v2_body_wall = 1.6; // Retain V1's wall/joint reinforcement for the TPU trial.
 v2_eps = 0.02;
 
-v2_ball_radius = ball_diameter / 2;
+v2_ball_radius = head_diameter / 2;
 v2_ball_center = v2_compact_height - v2_ball_radius;
 v2_blend_end = v2_ball_center +
                v2_ball_radius * sin(sphere_join_angle);
@@ -71,6 +80,11 @@ assert(v2_start_slope() >= 0 &&
        (v2_start_slope() + v2_blend_slope) * v2_blend_length <=
        3 * (v2_blend_radius - v2_start_radius),
        "The nose blend must widen monotonically, without an extra string pocket.");
+assert(len(lower_labels) == 4 && label_size > 0 && label_depth > 0 &&
+       v2_body_wall - label_depth >= 1.2);
+assert(label_start > 32 && label_length > 0 &&
+       label_start + label_length < v2_split_height - v2_joint_root_height,
+       "Keep lettering away from the base socket and upper spigot.");
 
 // Cubic Hermite interpolation matches BOTH endpoint slopes: the existing
 // tube's cosine profile and the exact spherical tangent, not just radii.
@@ -242,8 +256,39 @@ module v2_print_at(start, radius) {
         children();
 }
 
+module v2_label_cutters() {
+    // Limit all four text prisms to a shallow skin following the tube taper.
+    skin_steps = 80;
+    outer = [for (i = [0 : skin_steps])
+        let(z = label_start + label_length * i / skin_steps)
+        [radius_at(z) + v2_eps, z]];
+    inner = [for (i = [skin_steps : -1 : 0])
+        let(z = label_start + label_length * i / skin_steps)
+        [radius_at(z) - label_depth, z]];
+    intersection() {
+        rotate_extrude(convexity = 10) polygon(concat(outer, inner));
+        union() {
+            for (i = [0 : 3])
+                rotate([0, 0, i * 90])
+                    translate([0, 0, label_start])
+                        rotate([180, -90, 0])
+                            linear_extrude(height = 12, convexity = 10)
+                                text(lower_labels[i], size = label_size,
+                                     font = label_font, halign = "left",
+                                     valign = "center");
+        }
+    }
+}
+
+module v2_lower() {
+    difference() {
+        lower_tube();
+        v2_label_cutters();
+    }
+}
+
 if (part == "lower_body")
-    v2_print_at(v2_body_start, 11.6) lower_tube();
+    v2_print_at(v2_body_start, 11.6) v2_lower();
 else if (part == "middle_body")
     v2_print_at(v2_split_height, 8.2) middle_tube();
 else if (part == "upper_body")
@@ -262,7 +307,7 @@ else if (part == "joint_upper_test")
 else if (part == "nose_transition_test")
     v2_print_at(blend_start - 10, v2_ball_radius) v2_upper(blend_start - 10);
 else {
-    color([0.85, 0.65, 0.2]) lower_tube();
+    color([0.85, 0.65, 0.2]) v2_lower();
     if (include_middle)
         color([0.82, 0.6, 0.18]) middle_tube();
     color([0.9, 0.7, 0.25])
@@ -272,9 +317,10 @@ else {
 
 echo(str("V2: flange OD ", flange_diameter,
          " mm; unchanged tube base OD 23.2 mm; integral TPU for AMS nose ",
-         ball_diameter, " mm; no separate TPU nose or mounting socket."));
+         head_diameter, " mm; no separate TPU nose or mounting socket."));
 echo(str("Assembled height: ", v2_compact_height + v2_extension,
          " mm. Tube lengths: lower 306.4, middle 320, upper ",
          v2_compact_height - v2_split_height,
          " mm. Horizontal print heights: lower 23.2, middle 16.4, upper ",
-         ball_diameter, " mm."));
+         head_diameter, " mm."));
+echo("Cap-test compliance is unverified: test the printed nose sample with the actual cap.");
