@@ -1,5 +1,225 @@
 # H2C printing and fit checks
 
+## Cylinder V2: 50 mm tape flange and integral rounded nose
+
+`PingPongParachute-CylinderV2.scad` is a separate V2 design. The instructions
+below this section and the older `PingPongParachute*.3mf` projects still
+describe **V1**; they have not been converted to V2. Keep the V1 SCAD file next to V2 because
+V2 imports its unchanged lower/middle tubes and tube connectors.
+
+### Ready-to-slice H2C project
+
+Open **`PPP-Cylinder-V2.3mf`** in Bambu Studio as a **project**, not just
+geometry. It contains the generated V2 STLs, their horizontal orientations,
+and these settings:
+
+- **H2C, 0.4 mm, right hotend**; filament slot 1 is **Bambu TPU for AMS**.
+- Factory material values: **230 C nozzle, 35 C textured PEI bed, 0.97 flow
+  ratio, 12 mm3/s maximum volumetric speed**; no heated chamber.
+- **0.20 mm layers, four walls, 0% sparse infill**, 5 mm outer brim.
+- **Normal/snug support, build-plate-only**, not trees; 3 mm support spacing,
+  no dense interface layers, and trial 0.3 mm top/bottom support separation.
+- Conservative 30 mm/s outer walls and 40 mm/s inner walls.
+
+Your saved **Engineering Plate** selection, rearranged plates, and duplicate
+objects are preserved in the smaller-head and engraving updates. The table below describes
+the **original layout**, not a reset of your saved arrangement.
+
+| Original plate | Contents |
+|---|---|
+| 1 - Fit checks | Full 50 mm wavy flange, base fit coupon, male/female joint coupons, hollow nose/shoulder sample |
+| 2 - Lower | One horizontal lower tube |
+| 3 - Middle | One horizontal middle tube |
+| 4 - Upper | One horizontal upper tube with integral hollow rounded nose |
+
+The updated saved project loads in Bambu Studio. The 30 mm upper and nose
+sample were also sliced individually with the saved H2C settings, without
+slicer warnings. Their support toolpaths were checked against their cavities:
+**no internal support paths**. One upper tube is estimated at **36.3 g**
+total filament, including **4.1 g** external support, versus 43.7 g total
+for the earlier 40 mm version. These are isolated-part slicer estimates,
+not measured weights or totals for your rearranged multi-object plates.
+
+The saved project is **unsliced**, so slice it in your installed Bambu Studio
+and inspect the preview before sending a job. Do not auto-orient the tubes
+or switch to automatic trees. Print the short nose and connector coupons
+first; print the flange alone using object selection if it shares a plate
+with full tubes. Confirm TPU support removal, connector fits, bottle contact,
+cap-ceiling clearance, and cord release before printing the full tubes.
+The project uses automatic external normal support, not pre-painted supports;
+the manual painting advice below is for further refinement after that trial.
+
+### Geometry and fit
+
+The **tape flange is 50 mm in diameter**, not 50 cm. The tube base remains
+23.2 mm, its bore remains 17.60 mm, and the flange spigot remains 17.50 mm
+over 20 mm engagement. The widened panel provides a **13.4 mm radial tape
+ledge** around the tube. The **entire five-lobed, wavy bottle-contact
+underside spans the full 50 mm diameter**; this is not a flat ring added
+around the old 34 mm seat. It follows V1's approximate petaloid **1 L soda
+bottle bottom**, retaining the 5 mm central dome and 3 mm valley heights
+while expanding the radial pattern to the new edge. The top remains flat
+for tape. The center bore and locating spigot are not scaled.
+This assumes a 68 mm bottle with five feet, not a scan of a specific bottle:
+check the contour's contact, foot alignment, and tape routing against the
+actual 1 L bottle before printing the full tubes.
+
+V2's **30 mm rounded nose is integral with the TPU for AMS upper tube**,
+reduced from 40 mm. There is
+no separate TPU nose, nose socket, collar, or nose-retaining tape. A
+tangent-matched shoulder widens continuously from the pipe into the lower
+spherical surface, removing the annular nose joint reported to trap parachute
+strings. This eliminates that joint, **not every possible snag**: a string
+can still wrap around the wider head, other tube joints, rough print layers,
+or tape edges.
+The head is kept **completely smooth**: no target grooves, engraving,
+mounting hole, or added mounting anchor.
+
+**Bottle-cap test: not yet verified.** The supplied official Figure 1 says
+**"Nose not touching inside top of cap"** and shows the cap rim resting on
+the nose. This is a cap-ceiling clearance test, not a ping-pong-ball diameter
+requirement or a ban on rim contact. The 30 mm diameter is a smaller
+prototype, not a claim that it meets the event rule or is the minimum
+passing size. Check it using the actual 1 L bottle cap.
+Do not scale the whole upper STL: that would change its connector.
+`head_diameter` changes only V2's head/shoulder and print orientation;
+the imported V1 tube dimensions stay unchanged.
+
+For an ideal cylindrical cap of opening diameter `d` and clear inside depth
+`h`, a spherical head of radius `R` resting on the rim protrudes by
+`R - sqrt(R*R - (d/2)*(d/2))`. Its diameter must exceed `d`, and that
+protrusion must be **less than `h` with a tolerance margin**. For example,
+a 30 mm head with a hypothetical 26 mm opening protrudes about 7.52 mm.
+Those are not measured cap dimensions. Real threads, liners, seals, rim
+geometry, and TPU deformation can change contact and invalidate that
+simple calculation. Print the short nose sample, place the actual cap
+over it as shown in Figure 1, and verify clearance below the inside top
+before printing the full upper tube.
+
+### Lower-cylinder identity engravings
+
+The lower tube has four **recessed, longitudinal labels**, spaced at
+90-degree intervals around its circumference:
+
+| Angle around tube | Engraving |
+|---|---|
+| 0 degrees | Odle Middle School |
+| 90 degrees | Siddhu |
+| 180 degrees | Team Feynman |
+| 270 degrees | Allen |
+
+The lettering uses a 5 mm font-size setting with a **0.35 mm radial recess**
+following the tapered outer surface. The available marking window is
+48-123 mm above the bottle-seat datum, away from the flange socket and
+upper spigot. The full longest label fits within that window; none is
+clipped to fit. Nominal material behind the letters is at least **1.25 mm**
+where the original tube wall is 1.6 mm. Do not deepen the text without
+checking wall thickness again.
+
+Only the lower-tube geometry changes; its mating dimensions and overall
+length are unchanged. The middle, fit coupons, and smooth head retain their
+geometry. The saved H2C project includes the engraved lower mesh without
+resetting your existing placements, duplicate objects, or print settings.
+Some lettering faces external support during horizontal printing; remove
+that support carefully and check readability and surface condition before use.
+The engraved lower also slices without warnings using the saved H2C settings;
+its support toolpaths remain outside the hollow bore.
+
+**Print all V2 parts in Bambu TPU for AMS**, including the flange, tubes,
+and coupons. The reported brittle ABS impact failures motivate this material
+change; keeping the reinforced walls is a starting point, not proof of drop
+survival. [Bambu TPU for AMS](https://bambulab.com/en/filament/tpu-for-ams)
+is **68D Shore hardness**, tougher and more flexible than rigid ABS but much
+stiffer than the former TPU 95A nose. It is not a soft crash bumper. Select
+the **Bambu TPU for AMS** material preset for the actual printer/nozzle,
+not Generic ABS, regular TPU 95A, or TPU 95A HF. Use a supported AMS model
+and the manufacturer's current drying, bed, cooling, and feed instructions.
+Do not carry over the ABS heated-chamber settings or its flow/speed profile.
+
+Assembled height remains **900 mm**, or **600 mm** without the middle.
+Export each part individually with `print_orientation=true`:
+
+| V2 selector | Material | Print orientation / height |
+|---|---|---|
+| `lower_body` | TPU for AMS | Horizontal, diagonal on bed; 23.2 mm high, 306.4 mm long |
+| `middle_body` | TPU for AMS | Horizontal, diagonal on bed; 16.4 mm high, 320 mm long |
+| `upper_body` | TPU for AMS | Horizontal, diagonal on bed; 30 mm high, 307.4 mm long |
+| `flange` | TPU for AMS | Bottle-contact side down; 50 mm outside diameter |
+| `fit_test`, `joint_lower_test`, `joint_upper_test` | TPU for AMS | Existing base/joint interfaces, in V2 print orientation |
+| `nose_transition_test` | TPU for AMS | Horizontal, 90 mm long shoulder/nose sample; no connector |
+
+V2 exports are `PingPongParachute-V2-LowerBody.stl`,
+`PingPongParachute-V2-MiddleBody.stl`, `PingPongParachute-V2-UpperBody.stl`,
+`PingPongParachute-V2-Flange.stl`, and
+`PingPongParachute-V2-NoseTransitionTest.stl`, plus
+`PingPongParachute-V2-FitTest.stl`, `PingPongParachute-V2-JointLowerTest.stl`,
+and `PingPongParachute-V2-JointUpperTest.stl`. The middle geometry and all
+base/joint interfaces are unchanged; the lower tube now has the shallow
+identity engraving described above. Their V2 export orientation is
+horizontal. **Re-slice in TPU for AMS**; unchanged geometry does not mean
+reuse ABS toolpaths or assume the same printed fit.
+
+**Do not stand the tubes upright.** Tall, slender V1 prints were reported
+to oscillate and become unstable at 200-300 mm height. V2's
+`print_orientation=true` lays the tubes on their sides at `bed_angle=45`
+degrees, reducing height to their maximum diameter and fitting their long
+axes diagonally across the plate. Check actual printable area, brim, and
+toolhead-exclusion zones in the slicer; print long sections on separate
+plates if necessary. Do not auto-orient them upright. `print_orientation=false`
+is the assembled-coordinate model, not the intended print orientation.
+
+The upper tube is **hollow through the shoulder and rounded head**, with
+an internal **45-degree pitched roof** in its horizontal orientation.
+There is no solid/conical nose plug, permanent internal tree, or modeled
+infill. The pitched roof replaces the wide internal circular ceiling,
+while retaining the round 11.60 mm
+female connector for its full 20 mm engagement. The roof tapers into that
+round socket over the following 4 mm. Local roof walls are thicker than
+the 1.6 mm skin. Keep the exported roll orientation: rolling the part around
+its long axis would turn the pitched roof sideways. The lower/middle bores
+remain circular; their short-span internal bridging still needs a coupon
+check in TPU for AMS.
+
+**Minimize support waste:** use build-plate-only, manually painted support
+along the narrow external underside that actually needs it, not automatic
+trees around the whole tube. The integral ball lifts the narrower upper
+pipe above the bed, so it needs external support along that pipe, not just
+under the ball. Compare sparse normal support with trees; a low continuous
+support strip may use less material than many branches. Leave the internal
+cavities support-free only after inspecting the sliced roof and proving it
+with the horizontal nose and joint coupons. A failed bridge is not fixed
+by hiding an unremovable tree inside a long tube. The flange still needs
+local support under its widened bottle-seat contours.
+Compare support filament separately from model filament.
+Set **sparse infill to 0%** for the hollow upper part. Start with **normal
+support, build-plate-only**, restricted to the painted external underside;
+do not allow automatic trees to grow into the socket or head. In layer
+preview, confirm that the cavity contains **no support or infill toolpaths**
+before printing. Zero infill alone does not disable support. If the slicer
+still inserts internal supports, block those regions or disable automatic
+support and use external support painting; do not print the full part
+hoping the trapped trees can be removed later.
+Keep interfaces minimal only after a small TPU-for-AMS support-removal
+trial; tune Z separation using that material's profile rather than copying
+V1's TPU 95A gaps. Excessive gaps can ruin the underside, while fused
+supports can waste the entire part. Keep external rounded surfaces free
+of support scars wherever possible because they can catch cord.
+Do not print the assembly as a single object or scale mating parts.
+
+Print the flange/base and tube-joint coupons first. Print the
+`nose_transition_test` before the full upper tube and check the surface
+with the **actual parachute cord**, pulling it across the shoulder from
+multiple directions and under light tension. Remove burrs and layer defects
+without damaging the shell. Repeat deployment checks on the full dry
+assembly, including tape and all remaining joints, before controlled flight
+tests. CAD smoothness alone does not establish reliable release, strength,
+impact survival, stability, or event compliance.
+The 900 mm flexible assembly may bend or buckle more than ABS; inspect joint
+retention and balance under load, and compare the 600 mm configuration before
+attempting full-height launches. All tube joints still require external tape.
+
+## V1 project reference
+
 The current projects use **Generic ABS** for the three tubes, flange,
 fins, and rigid fit coupons, and **Bambu TPU 95A** for the nose and its
 socket coupon. ABS replaces the failed ASA Aero printing trial; do not
