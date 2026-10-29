@@ -1,11 +1,236 @@
 # H2C printing and fit checks
 
+## Cylinder V3: short TPU top and 150 mm rigid extensions
+
+`PingPongParachute-CylinderV3.scad` is a separate design; **V1, V2, their
+STLs, and your saved V2 project are not overwritten**. Keep both older SCAD
+files beside V3. The lower tube, including its labels, and the 50 mm flange
+are reused directly from V2 without changing their shape. Continue using
+`PingPongParachute-V2-LowerBody.stl` and `PingPongParachute-V2-Flange.stl`;
+there is no need to reprint a good lower or flange.
+
+The chosen starting dimensions are a **100 mm total TPU upper**, including
+the integral **30 mm rounded head**, and middles that add **150 mm each to
+the assembled length**. Each middle is **170 mm physically**, including its
+20 mm male spigot. If 150 mm was intended as the entire printed length,
+set `extension_length=130` and re-export/re-slice. The old 307.4 mm upper
+is replaced, not scaled: the short upper retains a 24 mm reinforced
+socket/root region, tapers to a 12 mm neck, then blends smoothly into the
+head. Less unsupported TPU neck reduces the lever arm; resistance to
+folding still requires a physical trial.
+
+The middle has the same 12 mm waist, 1.6 mm nominal wall, and reinforced
+ends as before, with shorter transitions between the ends. **Female ID
+11.60 mm, male OD 11.50 mm, bore ID 7.50 mm in the male spigot, and 20 mm
+engagement are unchanged.** Existing V1/V2 tube joints and V3 sections
+remain interchangeable; any number of middles can be inserted or removed.
+Mixed-material shrinkage and TPU deformation can change the *printed* fit,
+so test the TPU socket against the PETG/ABS male coupon first. These remain
+clearance-fit, **externally tape-retained** joints, not latches.
+
+Assembly height from the bottle-seat datum is
+`292.6 + middle_count * extension_length + upper_length` mm:
+392.6 mm without middles, 692.6 mm with two, or **842.6 mm with three** at
+the defaults. V3 does not silently lengthen the bottom to recover V2's
+900 mm height. `middle_count` changes the preview only.
+
+### Why shorter sections and grounded bracing
+
+A 40-degree tilt alone leaves a long, lightly supported cantilever.
+Cross-links between two equally floppy pipes alone can let the entire pair
+sway together. V3's optional **`middle_braced_pair`** therefore combines:
+
+- Two parallel 170 mm middles, **40 degrees above the bed** (50 degrees
+  from vertical), with centers 28 mm apart.
+- A **1.2 mm thick longitudinal sacrificial web under each pipe**, anchored
+  to a shared 0.6 mm foot and connected through small, spaced cutting tabs.
+- Horizontal cross-links between the webs at the tab stations, restraining
+  relative side-to-side movement. These include approximately 27 mm clear
+  bridges, which must be proven with `brace_test`.
+
+The webs stop short of the male root and begin beyond the full female
+engagement. Only the small tabs touch the outer body; **neither mating
+surface nor the hollow bore is intentionally modified**. The clean
+`middle_body` export has no bracing. The full inclined pair stays below
+120 mm tall, instead of a 170 mm upright middle or the old 320 mm middle.
+The short `brace_test` contains two 64 mm socket/body samples and the same
+web/tab/cross-link construction. It is a disposable printing/removal trial,
+not an extension to install in the assembly.
+
+This is an **experimental stabilizer, not a proven printing or impact
+solution**. Check that the slicer actually generates the thin webs and tabs.
+If the bridges sag or the webs shake, do not launch a full plate: adjust the
+bridge settings, reduce speed/acceleration, or revise the bracing after the
+short trial. Ordinary supports remain useful under the inclined sockets and
+local overhangs; removable supports with a separation gap are not structural
+braces.
+
+After cooling, remove ordinary supports, then use flush cutters to sever
+the cross-links and each small body tab while supporting the tube close to
+the cut. **Do not twist or snap a whole rigid web off the tube**, and do not
+cut into its 1.6 mm wall. Remove the foot/webs completely, trim remaining
+nubs, and reject tubes with cuts, cracks, or damaged layers. Inspect the
+cord-contact surfaces and both connectors before assembly.
+
+### Material-separated H2C projects
+
+Open the following **as projects**, not geometry-only imports. Both target
+the H2C 0.4 mm right hotend and Textured PEI; select the actual installed
+plate/material before printing. They are separate from your customized V2
+layout and do not change it.
+
+| Project | Plate 1: print first | Plate 2 |
+|---|---|---|
+| `PPP-Cylinder-V3-TPU.3mf` | 28 mm female socket coupon | One 100 mm upper, socket down |
+| `PPP-Cylinder-V3-PETG.3mf` | Male coupon and short braced-pair trial | Two full inclined middles with cut-away bracing |
+
+These are **unsliced, editable projects**, not jobs sent to the printer.
+All four plates were sliced with the installed Bambu Studio without slicer
+warnings. The resulting support paths were checked: no TPU supports and no
+PETG support inside either tube bore; all modeled body attachment tabs
+appear in the toolpaths. This checks preparation, not real-world printing.
+Approximate slicer totals, including brims/supports, are **13.2 g / 1 h 41 min**
+for the upper and **50.4 g / 6 h 39 min** for a pair of full rigid middles.
+The male/brace trial plate is about **18.0 g / 2 h 39 min**.
+Re-slice and review on your installed printer configuration before printing;
+no machine-ready G-code is supplied in the repository.
+
+The six new STL exports are `PingPongParachute-V3-UpperBody.stl`,
+`PingPongParachute-V3-MiddleBody.stl`,
+`PingPongParachute-V3-MiddleBracedPair.stl`,
+`PingPongParachute-V3-BraceTest.stl`,
+`PingPongParachute-V3-JointLowerTest.stl`, and
+`PingPongParachute-V3-JointUpperTest.stl`. They are closed meshes in their
+intended print orientations: upright clean parts/coupons, pre-inclined
+braced pairs. **Do not auto-orient the braced STL.** Projects embed the
+default geometry; editing SCAD does not update them automatically.
+If you change length, angle, or spacing, re-export, replace the meshes,
+and refit the bore blockers before re-slicing.
+
+The TPU project uses the installed **Bambu TPU for AMS**, not Generic TPU
+95A: 230 C nozzle, 35 C textured bed, factory 0.97 flow ratio. Its short
+upper prints **upright**, below the reported instability height, without
+supports. The outside shoulder is gradual, and the hollow head has a
+**45-degree conical internal roof** for this orientation. The outside stays
+smooth and spherical; the crown is locally thicker than the nominal wall.
+Do not lay it sideways and assume V2's horizontal pitched roof is present.
+
+The rigid project uses installed **Bambu PETG Basic**: 245 C first-layer /
+250 C subsequent nozzle, 70 C textured bed, factory 0.97 flow ratio.
+Use the correct preset for your actual PETG if it is not PETG Basic.
+Normal/snug build-plate-only supports are enabled for the inclined pairs;
+explicit **bore support-blocker volumes** are included. Keep those
+non-printing blockers in place. Inspect the sliced preview to confirm that
+the bore and connectors do not contain trapped supports.
+
+Both use **0.20 mm layers, four walls, 0% sparse infill, 6 mm outer brim**,
+and deliberately conservative trial motion settings: **500 mm/s2 normal
+acceleration, 300 mm/s2 outer walls, 800 mm/s2 travel**. TPU walls are
+25/35 mm/s outer/inner; PETG walls 30/45 mm/s; first layer and bridges
+20 mm/s. These are starting settings, not measured optimum values.
+Print **by layer**, not sequentially/by object, so the nozzle does not
+collide with neighboring tall sections or the connected brace structure.
+
+For **ABS**, use the same rigid meshes and switch to the installed H2C ABS
+preset, including its bed, chamber, cooling, flow, and shrink compensation;
+do not print ABS using this PETG project unchanged. Use an enclosed,
+appropriately ventilated setup. PETG is the first trial to avoid making
+ABS warping another variable, not a guarantee of superior drop survival.
+Do not co-print TPU and ABS/PETG on a shared plate with incompatible bed
+or chamber settings. Dry each filament per its manufacturer instructions.
+
+### Print and impact checks
+
+Start with both material-specific fit coupons and the short brace trial.
+Then print one upper and one pair of middles. Check fit, straightness,
+brace removal, layer quality, cap clearance, and dry cord deployment before
+repeating the middle plate. Keep a known-good lower unchanged.
+
+**Orientation is a tradeoff, not a cure for brittle layers.** Flat tubes can
+have filament paths along their axis, while upright tubes put axial loads
+across layer bonds. Which orientation survives a drop depends on the impact
+direction, seam, material, and bonding; 40 degrees does not eliminate
+anisotropy or establish drop strength. Compare identical PETG/ABS coupons
+printed flat and inclined under controlled, representative bending/impact.
+Improve drying, calibrated flow, temperature within the material's range,
+and cooling before attributing every crack to orientation. Extra infill in
+the empty bore is not a substitute for sound shell bonding.
+
+For wobble, prioritize **shorter modules, grounded stabilization, clean bed
+adhesion, and lower acceleration** before tuning just print speed. Input
+shaping compensates printer motion, not arbitrary movement of a flexible
+part. Inspect for nozzle strikes, curled edges and material blobs; do not
+hide those problems with braces. Keep cooling adequate for the short TPU
+roof and PETG bridges without sacrificing wall bonding.
+
+General references: [MakerVerse: stronger FDM prints](https://www.makerverse.com/resources/3d-printing/stronger-fdm-3d-printing/)
+discusses anisotropy, perimeter shells, ribs, and temperature/speed/cooling
+tradeoffs; [Xometry: FDM design tips](https://xometry.asia/en/fdm-3d-printing-design-tips-best-practices-and-techniques-for-stronger-prints/)
+discusses orientation, supports, and design for strength. The particular
+cut-away fixture and numeric motion settings here are a proposed trial,
+not manufacturer-qualified settings.
+
+The 30 mm nose is still subject to the actual bottle-cap clearance test
+described in V2 below. A shorter TPU neck and rigid middles do not validate
+impact survival, launch stability, tape retention, or event compliance.
+Use controlled progressive tests; this remains an external attachment,
+not a pressure vessel or release mechanism.
+
 ## Cylinder V2: 50 mm tape flange and integral rounded nose
 
 `PingPongParachute-CylinderV2.scad` is a separate V2 design. The instructions
 below this section and the older `PingPongParachute*.3mf` projects still
 describe **V1**; they have not been converted to V2. Keep the V1 SCAD file next to V2 because
 V2 imports its unchanged lower/middle tubes and tube connectors.
+
+### Ten original V2 middle pipes on one plate
+
+Open **`PPP-Cylinder-V2-10MiddlePipes-PETG.3mf`** as a project for the
+requested batch: **10 V2 middle pipes, all joined into ONE shared cut-away
+ladder**, not five independent pairs. These are the original **320 mm**
+printed pipes (**300 mm added assembled length plus 20 mm spigot**), not
+the shorter V3 middles. The existing V2 project and original pipe STL
+remain unchanged.
+
+All ten axes are **40 degrees above the bed**, with 28 mm center spacing.
+Ten grounded longitudinal webs, ten cross-rungs spanning the whole row,
+100 small exterior attachment tabs, and one shared 0.6 mm foot stabilize
+the complete batch. The connected model is approximately **254.1 x 268.4 x
+216.4 mm**, before slicer supports/brims. The webs and tabs stay clear of
+the original socket engagement and male connector/root. Cut every
+attachment tab while supporting the nearby tube; do not tear or twist
+the ladder off. Remove all fixture material before use.
+
+The installed slicer estimates approximately **637 g of PETG and 73 hours**
+for the complete plate, including supports/brims. The batch slices without
+warnings, all 100 body tabs appear in the toolpaths, and support paths stay
+out of all ten bores. These are preparation checks, not a physical print
+trial. Ensure sufficient filament with margin for calibration/purge.
+
+`PingPongParachute-V2-10Pipes.scad` defines the fixture and imports the
+unscaled original `PingPongParachute-V2-MiddleBody.stl`.
+`PingPongParachute-V2-10MiddlePipes-Braced.stl` is the exported single,
+connected printing model. Keep the original middle STL and
+`PingPongParachute-Cylinder.scad` beside the batch SCAD. Do not auto-orient
+or split the connected model in the slicer.
+
+This **separate batch intentionally uses PETG Basic**, unlike the
+all-TPU V2 instructions below. It targets the H2C right 0.4 mm hotend and
+Textured PEI, using 245/250 C nozzle, 70 C bed, 0.20 mm model layers,
+four walls, 0% sparse infill, 6 mm outer brim, normal/snug external supports,
+and by-layer printing. Ten bore-blocking regions are packaged as one
+non-printing support-blocker part; leave it in place. Conservative motion
+settings match the V3 PETG trial: 30/45 mm/s outer/inner walls and
+500/300 mm/s2 normal/outer acceleration. Select the actual filament/plate,
+re-slice and inspect the preview before printing. For ABS, change to the
+correct ABS material/chamber settings rather than using PETG temperatures.
+
+This is a long, experimental print: unlike the short V3 layout, the
+original V2 pipes extend above 150 mm even when inclined. The shared
+grounded ladder is intended to restrain that motion, not proof that
+vibration or drop failures are eliminated. Prove fit and support/tab removal
+on a small trial before committing to all ten. The project is editable and
+unsliced; no print has been sent to the machine.
 
 ### Ready-to-slice H2C project
 
