@@ -29,7 +29,7 @@ seat_skin = 2.2;
 /* [Alignment cup] */
 bottle_diametral_clearance = 0.6;
 cup_wall = 1.2; // Skirt, cone-normal thickness and pipe guide.
-cup_skirt_height = 12;
+cup_skirt_height = 19.62; // Original 12 mm plus 0.3 inch (7.62 mm).
 cup_base_clearance = 2.2; // Cone starts above the bottle feet, not on the flange.
 cone_height = 42;
 guide_height = 12;

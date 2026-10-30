@@ -40,14 +40,18 @@ the pipe without lifting it off the central flange.
 |---|---|
 | Central flange OD | 50 mm, unchanged |
 | Bottle skirt ID / maximum cup outside diameter | 84.6 / 87.0 mm |
-| Bottle skirt height | 12 mm |
+| Bottle skirt height | 19.62 mm (12 mm + 0.3 inch / 7.62 mm) |
 | Hollow conical section height | 42 mm |
 | Tapered pipe guide height | 12 mm |
-| Cup overall print height | 68.2 mm; cone starts 2.2 mm above the bottle feet |
+| Cup overall print height | 75.82 mm; cone starts 2.2 mm above the bottle feet |
 | Skirt / cone / pipe guide wall | 1.2 mm; cone measured normal to its slope |
 | Guide radial clearance / relief slots | 0.25 mm / four 1.2 mm slots |
 | Guide position above the lower pipe's physical bottom | 47.6-59.6 mm |
 | Flange spigot OD / lower socket ID / engagement | 17.50 / 17.60 / 20 mm, unchanged |
+
+The skirt extends 7.62 mm farther down the bottle for more tape overlap.
+The assembled cone and guide positions, diameters and 1.2 mm walls are
+unchanged; only the skirt and its matching fit ring are longer.
 
 Use the **unchanged V2 lower and V2 middle pipes**, not the shorter V3
 middle. Each V2 middle is 320 mm physically and adds 300 mm assembled;
@@ -68,8 +72,8 @@ These are not printer-ready Gcode archives, and no job has been sent.
 
 | Project / plate | Material | Slicer estimate including supports/brim |
 |---|---|---|
-| `PPP-Cylinder-V4-Cup-PLA-ToughPlus.3mf`, plate 1: bottle ring + tapered guide | Bambu PLA Tough+ | 6.2 g / 41 min |
-| Same project, plate 2: full hollow cup | Bambu PLA Tough+ | 20.8 g / 1 h 56 min |
+| `PPP-Cylinder-V4-Cup-PLA-ToughPlus.3mf`, plate 1: bottle ring + tapered guide | Bambu PLA Tough+ | 9.0 g / 54 min |
+| Same project, plate 2: full hollow cup | Bambu PLA Tough+ | 23.6 g / 2 h 4 min |
 | `PPP-Cylinder-V4-Pipes-PLA-ToughPlus.3mf`, plate 1: V2 lower + flange-socket fit coupon | Bambu PLA Tough+ | 42.3 g / 4 h 54 min |
 | Same project, plate 2: ten V2 middles, one connected 40-degree fixture | Bambu PLA Tough+ | 635.7 g / 73 h 1 min |
 | `PPP-Cylinder-V4-Flange-TPU.3mf`: contoured 50 mm flange | Bambu TPU for AMS | 9.6 g / 1 h 5 min |
@@ -94,10 +98,11 @@ match this revision. Start with a dry-fit and gentle tape tension; this
 thin prototype may ovalize, crease or crack and should be revised after
 the physical trial if needed.
 
-**Print the PLA Tough+ cup project's plate 1 first.** The 12 mm ring checks the entire bottle-skirt
+**Print the PLA Tough+ cup project's plate 1 first.** The 19.62 mm ring checks the entire bottle-skirt
 depth; the separate slotted guide checks the unchanged lower tube at
 47.6-59.6 mm above its bottom, not at an arbitrary point on the taper.
 The ring should seat without force, rocking or squeezing the bottle.
+Check the full extended depth: do not force it over a wider bottle section.
 The guide should slide to its intended position and allow gentle,
 symmetric tape closure. If either is wrong, adjust
 `bottle_diameter` / `bottle_diametral_clearance` or
@@ -111,7 +116,7 @@ scaling, to print just that coupon.
 
 The coupons, full cup and upper print without supports. Print the cup with
 its **wide bottle opening on the bed**, cone and narrow guide upward:
-its 68.2 mm height and broad footprint avoid another tall pipe cantilever.
+its 75.82 mm height and broad footprint avoid another tall pipe cantilever.
 Removing the former internal five-foot annulus leaves a continuously
 supported shell with a steep cone; supports are disabled for both PLA cup
 plates, with no support blocker needed.
@@ -148,7 +153,7 @@ before adding the remaining sections.
 
 The 50 mm flange is preserved, but the **separate cup necessarily expands
 the mounting envelope to 87.0 mm**. Allow clearance around any launcher,
-and check event rules. The cup adds meaningful flight mass: the 20.8 g
+and check event rules. The cup adds meaningful flight mass: the 23.6 g
 job estimate includes removable brim; weigh the cleaned part
 and assembled rocket. The previously reported near-30-second flight
 does not predict the heavier V4 assembly's flight time or stability.
