@@ -67,22 +67,26 @@ function v3_middle_radius(z) =
         blend(6, v3_joint_radius, (z - extension_length * 0.75) /
               (extension_length * 0.25 - v3_root)) : v3_joint_radius;
 
-function v3_upper_radius(z) =
+function v3_upper_radius(z, head_radius = v3_head_radius) =
+    let(center = upper_length - head_radius,
+        blend_end = center + head_radius * sin(-20),
+        blend_radius = head_radius * cos(-20))
     z <= 24 ? v3_joint_radius :
     z <= 36 ? blend(v3_joint_radius, 6, (z - 24) / 12) :
     z <= v3_blend_start ? 6 :
-    z < v3_blend_end ?
-        let(t = (z - v3_blend_start) / (v3_blend_end - v3_blend_start),
-            m1 = -tan(-20) * (v3_blend_end - v3_blend_start))
+    z < blend_end ?
+        let(t = (z - v3_blend_start) / (blend_end - v3_blend_start),
+            m1 = -tan(-20) * (blend_end - v3_blend_start))
         (2*t*t*t - 3*t*t + 1) * 6 +
-        (-2*t*t*t + 3*t*t) * v3_blend_radius +
+        (-2*t*t*t + 3*t*t) * blend_radius +
         (t*t*t - t*t) * m1 :
-    sqrt(max(0, v3_head_radius*v3_head_radius - pow(z - v3_center, 2)));
+    sqrt(max(0, head_radius*head_radius - pow(z - center, 2)));
 
 // Upright TPU printing: a 45-degree INTERNAL roof closes without a trapped
 // support tree. The smooth outside remains spherical; the crown is thicker.
-function v3_upper_inner(z) =
-    z <= v3_center ? v3_upper_radius(z) - socket_wall_at(z) :
+function v3_upper_inner(z, head_radius = v3_head_radius) =
+    z <= upper_length - head_radius ?
+        v3_upper_radius(z, head_radius) - socket_wall_at(z) :
     max(0, v3_inner_tip - z);
 
 module v3_middle() {
@@ -102,21 +106,25 @@ module v3_middle() {
     }
 }
 
-module v3_upper() {
+module v3_upper(head_diameter = 30) {
+    assert(head_diameter >= 30 && head_diameter <= 40);
+    head_radius = head_diameter / 2;
+    center = upper_length - head_radius;
+    blend_end = center + head_radius * sin(-20);
     levels = concat([0, 20, 24, 36, v3_blend_start],
         [for (i = [1 : body_steps])
-            v3_blend_start + (v3_blend_end - v3_blend_start) * i / body_steps],
+            v3_blend_start + (blend_end - v3_blend_start) * i / body_steps],
         [for (i = [1 : 20])
-            v3_center + v3_head_radius * sin(-20 + i)],
+            center + head_radius * sin(-20 + i)],
         [for (i = [1 : 89])
-            v3_center + v3_head_radius * sin(i)]);
-    inner_levels = [for (z = levels) if (z <= v3_center) z];
+            center + head_radius * sin(i)]);
+    inner_levels = [for (z = levels) if (z <= center) z];
     rotate_extrude(convexity = 10)
         polygon(concat(
-            [for (z = levels) [v3_upper_radius(z), z]],
+            [for (z = levels) [v3_upper_radius(z, head_radius), z]],
             [[0, upper_length], [0, v3_inner_tip]],
             [for (i = [len(inner_levels)-1 : -1 : 0])
-                let(z = inner_levels[i]) [v3_upper_inner(z), z]]));
+                let(z = inner_levels[i]) [v3_upper_inner(z, head_radius), z]]));
 }
 
 module v3_tilted() {

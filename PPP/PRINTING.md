@@ -1,5 +1,178 @@
 # H2C printing and fit checks
 
+## PPP cylinder V4: measured five-foot flange and hollow alignment cup
+
+V4 keeps the **50 mm central TPU flange** and its working pipe connection,
+and adds a separate **Bambu PLA Tough+ hollow cone/cup** around the bottle bottom.
+**Upper and flange stay TPU for AMS; cup, lower and middle pipes use
+Bambu PLA Tough+.** Retain the TPU flange following the reported PETG
+flange fractures during drop experiments; this is not an impact rating
+for either the TPU flange or the PLA Tough+ parts.
+The broad bottle skirt and tapered pipe guide provide two separated
+centering locations instead of relying on tape over a small flexible flange.
+The pipe seats fully on the flange at the bottle's bottom center. The cup
+is a **separate, full-360-degree alignment brace**, not a second bottom
+seat or a spacer under the pipe. Its cone and bottle skirt are complete
+circles; four equally spaced slots are confined to the small pipe guide.
+This is a printable **measured approximation for dry-fitting**, not a
+scanned contour or a physically proven anti-tilt mount.
+
+The bottle is **Signature SELECT Strawberry Watermelon
+Sparkling Water, 1 L (33.8 fl oz), UPC 021130253029**, manufactured by
+**Better Living Brands LLC**, with this
+[supplied Safeway product link](https://www.safeway.com/shop/product-details.960042854.html).
+The supplied photographs/caliper measurements give approximately **83-84 mm
+bottom diameter, five 22-23 mm feet, 8.6-9 mm grooves and 9 mm maximum
+recess depth**. The smooth model uses 84 / 22.5 / 8.8 mm respectively,
+interpreting widths as chords at the nominal bottle circle. Radial curvature
+and transitions between the feet remain approximations.
+
+With the bottle inverted for launch, its feet define Z=0 and the center
+and grooves recess **below** that plane. The flange follows this
+orientation, using **8.7 mm intrusion** into the reported 9 mm recess
+(0.3 mm relief). The central flange has a flat pipe-facing surface; the
+lower pipe's bottom rests directly on it with the original 20 mm spigot
+fully inserted. The cup has **no internal annular seat, shelf or flange
+connection**: its skirt surrounds the bottle, and its upper guide braces
+the pipe without lifting it off the central flange.
+
+| Feature | V4 dimension |
+|---|---|
+| Central flange OD | 50 mm, unchanged |
+| Bottle skirt ID / maximum cup outside diameter | 84.6 / 87.0 mm |
+| Bottle skirt height | 12 mm |
+| Hollow conical section height | 42 mm |
+| Tapered pipe guide height | 12 mm |
+| Cup overall print height | 68.2 mm; cone starts 2.2 mm above the bottle feet |
+| Skirt / cone / pipe guide wall | 1.2 mm; cone measured normal to its slope |
+| Guide radial clearance / relief slots | 0.25 mm / four 1.2 mm slots |
+| Guide position above the lower pipe's physical bottom | 47.6-59.6 mm |
+| Flange spigot OD / lower socket ID / engagement | 17.50 / 17.60 / 20 mm, unchanged |
+
+Use the **unchanged V2 lower and V2 middle pipes**, not the shorter V3
+middle. Each V2 middle is 320 mm physically and adds 300 mm assembled;
+the new PLA Tough+ project prints these same geometries, without scaling
+the connectors. Existing V2 parts remain geometrically compatible, but
+check the printed fit when changing materials. The short V4 TPU upper
+retains V3's 100 mm length and 11.60 mm female socket / 20 mm engagement,
+with the rounded tip enlarged exactly **30 to 33 mm diameter**. Check
+that head with the actual standard soda-bottle cap used at the event;
+the change is not a compliance certification. None of the slip joints
+is a latch: retain them with external tape.
+
+### Print projects and fit-first sequence
+
+All four projects are separate, editable **H2C right 0.4 mm hotend** jobs.
+Open them in Bambu Studio and re-slice/review for the actual machine.
+These are not printer-ready Gcode archives, and no job has been sent.
+
+| Project / plate | Material | Slicer estimate including supports/brim |
+|---|---|---|
+| `PPP-Cylinder-V4-Cup-PLA-ToughPlus.3mf`, plate 1: bottle ring + tapered guide | Bambu PLA Tough+ | 6.2 g / 41 min |
+| Same project, plate 2: full hollow cup | Bambu PLA Tough+ | 20.8 g / 1 h 56 min |
+| `PPP-Cylinder-V4-Pipes-PLA-ToughPlus.3mf`, plate 1: V2 lower + flange-socket fit coupon | Bambu PLA Tough+ | 42.3 g / 4 h 54 min |
+| Same project, plate 2: ten V2 middles, one connected 40-degree fixture | Bambu PLA Tough+ | 635.7 g / 73 h 1 min |
+| `PPP-Cylinder-V4-Flange-TPU.3mf`: contoured 50 mm flange | Bambu TPU for AMS | 9.6 g / 1 h 5 min |
+| `PPP-Cylinder-V4-Upper-TPU.3mf`: short 33 mm-tip upper | Bambu TPU for AMS | 14.4 g / 1 h 46 min |
+
+The mounting projects use 0.20 mm model layers, four walls, 0% sparse
+infill, 6 mm outer brims, and conservative 300/500 mm/s2 outer/default
+acceleration. PLA Tough+ uses the installed **`Bambu PLA Tough+ @BBL H2C`**
+profile, compatible with the H2C 0.4 mm nozzle: 245 C nozzle for all
+layers, 55 C Textured PEI bed, factory flow ratio 1.00 and 1.21 g/cm3
+density, with conservative 30/45 mm/s outer/inner walls. This is
+**PLA Tough+**, not the separate PLA Tough or Generic PLA preset.
+TPU uses 230 C nozzle,
+35 C bed, 25/35 mm/s walls. Dry filament and a calibrated material profile
+remain important.
+
+The entire PLA Tough+ cup uses the **1.2 mm experimental wall thickness**:
+skirt, cone and pipe guide. The cone's outer corners are offset so its
+sloped wall is 1.2 mm thick perpendicular to the surface, rather than
+a thinner wall from a 1.2 mm radial offset. The fit ring and guide coupon
+match this revision. Start with a dry-fit and gentle tape tension; this
+thin prototype may ovalize, crease or crack and should be revised after
+the physical trial if needed.
+
+**Print the PLA Tough+ cup project's plate 1 first.** The 12 mm ring checks the entire bottle-skirt
+depth; the separate slotted guide checks the unchanged lower tube at
+47.6-59.6 mm above its bottom, not at an arbitrary point on the taper.
+The ring should seat without force, rocking or squeezing the bottle.
+The guide should slide to its intended position and allow gentle,
+symmetric tape closure. If either is wrong, adjust
+`bottle_diameter` / `bottle_diametral_clearance` or
+`guide_radial_clearance` in SCAD, then regenerate the affected STL and
+print project. Do not scale the whole cup or flange, which would alter
+the other fit surfaces. The pipe project's plate 1 also includes the
+original V2 flange-socket coupon: print that object alone first to test
+the PLA Tough+ socket over the TPU flange's full 20 mm spigot before
+committing to the full lower. Use Bambu Studio's object selection, not
+scaling, to print just that coupon.
+
+The coupons, full cup and upper print without supports. Print the cup with
+its **wide bottle opening on the bed**, cone and narrow guide upward:
+its 68.2 mm height and broad footprint avoid another tall pipe cantilever.
+Removing the former internal five-foot annulus leaves a continuously
+supported shell with a steep cone; supports are disabled for both PLA cup
+plates, with no support blocker needed.
+The flange prints bottle-contact side down, with local supports
+and a 0.3 mm separation gap to ease TPU removal. Remove all support/brim
+material before fit checks. Review the hollow cavity and both bores in
+Preview; the final slices contain no extrusion through the cup's upper
+cavity or flange bore. Support removal and TPU surface quality still
+need a physical trial.
+
+The PLA pipe project retains the original horizontal, diagonally oriented
+V2 lower and the existing ten-middle, 40-degree connected ladder. Normal
+build-plate-only supports are enabled, with blockers keeping the lower,
+socket coupon and all ten middle bores clear. Cut away all 100 small
+body tabs and remove the shared bracing before assembly; keep the V2
+connector surfaces unchanged. The ten-pipe job is a large, approximately
+three-day batch, not a first-print trial. Validate material adhesion,
+bridging, clean support removal and joints before committing to it.
+Original V2/V3 projects, including their historical PETG jobs, are unchanged.
+
+### Mounting and source exports
+
+Dry-fit on an **empty, unpressurized bottle**. Clock the flange
+to the five feet/grooves. The circular cup needs no five-foot indexing.
+Seat and symmetrically tape the central TPU flange first, install the
+original V2 lower fully over its 20 mm spigot, and tape-retain that joint.
+Slide the cup down over the lower **before installing middles/upper**,
+gently settle the skirt around the bottle and adjust alignment before
+securing it. Do not lift the pipe or use the cup as a load-bearing stop.
+Tape around the skirt-to-bottle junction and close the slotted guide
+evenly around the pipe. Uneven tape tension can still pull the assembly off axis.
+Check perpendicularity in two planes and check for rocking/slipping
+before adding the remaining sections.
+
+The 50 mm flange is preserved, but the **separate cup necessarily expands
+the mounting envelope to 87.0 mm**. Allow clearance around any launcher,
+and check event rules. The cup adds meaningful flight mass: the 20.8 g
+job estimate includes removable brim; weigh the cleaned part
+and assembled rocket. The previously reported near-30-second flight
+does not predict the heavier V4 assembly's flight time or stability.
+Do not cut, drill, heat or otherwise modify the pressure bottle, and
+do not force the printed parts onto it. Actual bottle fit, alignment,
+retention, launch safety and flight performance remain unverified.
+
+`PingPongParachute-CylinderV4.scad` defaults to an assembly preview; never
+print that assembly. Keep V1/V2/V3 SCAD files beside it. Export with
+`print_orientation=true` and the appropriate `part`:
+`flange`, `alignment_cup`, `cup_fit_ring`, `pipe_guide_test` or
+`upper_body`. The corresponding generated STLs are
+`PingPongParachute-V4-Flange.stl`,
+`PingPongParachute-V4-AlignmentCup.stl`,
+`PingPongParachute-V4-CupFitRing.stl`,
+`PingPongParachute-V4-PipeGuideTest.stl` and
+`PingPongParachute-V4-UpperBody.stl`.
+`mount_assembly` previews just the mount and lower. Assembly views and
+individual exports both show the complete circular cup, not a half-cut
+section. Bottle dimensions and clearances are exposed at the top of
+the SCAD file; `cup_base_clearance` places the cone above the bottle feet
+independently of flange thickness.
+Changing to PLA Tough+ changes the print presets, not these STL dimensions.
+
 ## Cylinder V3: short TPU top and 150 mm rigid extensions
 
 `PingPongParachute-CylinderV3.scad` is a separate design; **V1, V2, their
