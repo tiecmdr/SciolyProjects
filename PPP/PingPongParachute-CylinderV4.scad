@@ -34,8 +34,9 @@ cup_base_clearance = 2.2; // Cone starts above the bottle feet, not on the flang
 cone_height = 42;
 guide_height = 12;
 guide_radial_clearance = 0.25;
+guide_top_diameter_reduction = 1; // Taper the slotted lip; retain base clearance.
 guide_slot_width = 1.2;
-guide_unslotted_height = 3;
+guide_unslotted_height = 5;
 
 /* [Mesh quality] */
 angular_segments = 120;
@@ -86,6 +87,10 @@ assert(cup_skirt_height > v4_seat_depth &&
 assert(guide_radial_clearance >= 0.15 && guide_radial_clearance <= 0.5);
 assert(guide_slot_width >= 0.8 && guide_unslotted_height >= 3 &&
        guide_unslotted_height < guide_height);
+assert(guide_top_diameter_reduction >= 0 &&
+       guide_top_diameter_reduction * guide_unslotted_height / guide_height <=
+       2 * guide_radial_clearance,
+       "Keep the closed guide collar clear of the pipe.");
 assert(angular_segments >= 60 && angular_segments % seat_feet == 0 &&
        seat_radial_steps >= 12);
 assert(v4_cone_slope > 0 && v4_cone_slope <= 1,
@@ -107,7 +112,9 @@ function v4_seat_z(r, angle) =
     // Feet define Z=0; the inverted bottle's recess is BELOW that plane.
     -v4_seat_depth * (1 - t + t * v4_foot_phase(angle));
 function v4_guide_radius(z) =
-    radius_at(z - v4_pipe_offset) + guide_radial_clearance;
+    radius_at(z - v4_pipe_offset) + guide_radial_clearance -
+    guide_top_diameter_reduction / 2 *
+        min(1, max(0, (z - v4_guide_start) / guide_height));
 function v4_cavity_radius(z) =
     z <= v4_cup_base ? v4_mouth_radius :
     z < v4_guide_start ?
@@ -248,5 +255,8 @@ echo(str("Mount: central flange OD ", flange_diameter,
          "; cup print height ", v4_cup_top + cup_skirt_height, " mm."));
 echo(str("Cup guide starts ", v4_guide_start - v4_flange_top,
          " mm above the lower pipe's bottom; no V2 pipe geometry changes."));
+echo(str("Guide top diameter reduced ", guide_top_diameter_reduction,
+         " mm; slots ", guide_height - guide_unslotted_height,
+         " mm long; closed collar ", guide_unslotted_height, " mm."));
 echo("Five-foot surface is an approximate fit trial. Dry-fit without force; tape symmetrically.");
 echo("External attachment only: do not modify the pressure bottle. Fit, alignment and flight safety are unverified.");

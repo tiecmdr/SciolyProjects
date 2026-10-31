@@ -45,13 +45,19 @@ the pipe without lifting it off the central flange.
 | Tapered pipe guide height | 12 mm |
 | Cup overall print height | 75.82 mm; cone starts 2.2 mm above the bottle feet |
 | Skirt / cone / pipe guide wall | 1.2 mm; cone measured normal to its slope |
-| Guide radial clearance / relief slots | 0.25 mm / four 1.2 mm slots |
+| Guide base radial clearance / top opening reduction | 0.25 mm / 1 mm smaller diameter than the previous cup |
+| Guide relief slots / closed collar below slots | Four 1.2 mm-wide, 7 mm-long slots / 5 mm closed collar |
 | Guide position above the lower pipe's physical bottom | 47.6-59.6 mm |
 | Flange spigot OD / lower socket ID / engagement | 17.50 / 17.60 / 20 mm, unchanged |
 
 The skirt extends 7.62 mm farther down the bottle for more tape overlap.
-The assembled cone and guide positions, diameters and 1.2 mm walls are
-unchanged; only the skirt and its matching fit ring are longer.
+The bottle skirt, cone, guide position and 1.2 mm walls remain unchanged.
+Following the first printed fit check, the guide now tapers from its
+original base opening to a **1 mm smaller top opening**. The four slots
+are **7 mm long instead of 9 mm**, leaving **5 mm closed below them instead
+of 3 mm**. The closed collar retains nominal pipe clearance; only the
+slotted lip has a nominal 0.5 mm diametral interference with the V2 lower.
+This tighter guide still needs a physical fit check.
 
 Use the **unchanged V2 lower and V2 middle pipes**, not the shorter V3
 middle. Each V2 middle is 320 mm physically and adds 300 mm assembled;
@@ -69,11 +75,15 @@ is a latch: retain them with external tape.
 All four projects are separate, editable **H2C right 0.4 mm hotend** jobs.
 Open them in Bambu Studio and re-slice/review for the actual machine.
 These are not printer-ready Gcode archives, and no job has been sent.
+The cup project retains the saved **two-cup layout on plate 2** and
+**Engineering Plate selection at 55 C**. Confirm that selection matches
+the physical bed. Its print sequence is now **by layer** to avoid Studio's
+clearance conflict with the saved print-by-object arrangement.
 
 | Project / plate | Material | Slicer estimate including supports/brim |
 |---|---|---|
 | `PPP-Cylinder-V4-Cup-PLA-ToughPlus.3mf`, plate 1: bottle ring + tapered guide | Bambu PLA Tough+ | 9.0 g / 54 min |
-| Same project, plate 2: full hollow cup | Bambu PLA Tough+ | 23.6 g / 2 h 4 min |
+| Same project, plate 2: two full hollow cups in the saved layout | Bambu PLA Tough+ | 47.1 g / 4 h 15 min |
 | `PPP-Cylinder-V4-Pipes-PLA-ToughPlus.3mf`, plate 1: V2 lower + flange-socket fit coupon | Bambu PLA Tough+ | 42.3 g / 4 h 54 min |
 | Same project, plate 2: ten V2 middles, one connected 40-degree fixture | Bambu PLA Tough+ | 635.7 g / 73 h 1 min |
 | `PPP-Cylinder-V4-Flange-TPU.3mf`: contoured 50 mm flange | Bambu TPU for AMS | 9.6 g / 1 h 5 min |
@@ -103,12 +113,16 @@ depth; the separate slotted guide checks the unchanged lower tube at
 47.6-59.6 mm above its bottom, not at an arbitrary point on the taper.
 The ring should seat without force, rocking or squeezing the bottle.
 Check the full extended depth: do not force it over a wider bottle section.
-The guide should slide to its intended position and allow gentle,
-symmetric tape closure. If either is wrong, adjust
+Try the revised guide coupon before committing to the full cup; select
+just that object on plate 1 if you do not need another unchanged bottle ring. The
+slotted lip should flex gently and symmetrically around the pipe while
+the closed collar slides to its intended position. Do not force the
+PLA Tough+ guide or use tape to pull a jammed collar into place. If either
+coupon is wrong, adjust
 `bottle_diameter` / `bottle_diametral_clearance` or
-`guide_radial_clearance` in SCAD, then regenerate the affected STL and
-print project. Do not scale the whole cup or flange, which would alter
-the other fit surfaces. The pipe project's plate 1 also includes the
+`guide_radial_clearance` / `guide_top_diameter_reduction` in SCAD, then
+regenerate the affected STL and print project. Do not scale the whole cup
+or flange, which would alter the other fit surfaces. The pipe project's plate 1 also includes the
 original V2 flange-socket coupon: print that object alone first to test
 the PLA Tough+ socket over the TPU flange's full 20 mm spigot before
 committing to the full lower. Use Bambu Studio's object selection, not
@@ -153,8 +167,8 @@ before adding the remaining sections.
 
 The 50 mm flange is preserved, but the **separate cup necessarily expands
 the mounting envelope to 87.0 mm**. Allow clearance around any launcher,
-and check event rules. The cup adds meaningful flight mass: the 23.6 g
-job estimate includes removable brim; weigh the cleaned part
+and check event rules. The cup adds meaningful flight mass: approximately
+23.6 g per cup including removable brim; weigh the cleaned part
 and assembled rocket. The previously reported near-30-second flight
 does not predict the heavier V4 assembly's flight time or stability.
 Do not cut, drill, heat or otherwise modify the pressure bottle, and
